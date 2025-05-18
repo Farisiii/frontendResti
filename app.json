@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Ganesha Operation",
+    "slug": "frontend_resti",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/GOicon.png",
+    "scheme": "frontendresti",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/goIcon_noBG.png",
+        "backgroundColor": "#f5f5f5"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.testingbruh.frontend_resti"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/goIcon_noBG.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/goIcon_noBG.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#f5f5f5"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b243d9cf-ccbe-4b41-9e56-2d9f89c7d95d"
+      }
+    }
+  }
+}
