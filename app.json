@@ -6,14 +6,23 @@
     "orientation": "portrait",
     "icon": "./assets/images/GOicon.png",
     "scheme": "frontendresti",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/GOsplash-icon.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#F5F5F5",
+      "dark": {
+        "backgroundColor": "#F5F5F5"
+      }
+    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/goIcon_noBG.png",
-        "backgroundColor": "#f5f5f5"
+        "foregroundImage": "./assets/images/GOadaptive-icon.png",
+        "backgroundColor": "#F5F5F5"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.testingbruh.frontend_resti"
@@ -21,20 +30,9 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/goIcon_noBG.png"
+      "favicon": "./assets/images/GOfavicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/goIcon_noBG.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#f5f5f5"
-        }
-      ]
-    ],
+    "plugins": ["expo-router", "expo-splash-screen"],
     "experiments": {
       "typedRoutes": true
     },
