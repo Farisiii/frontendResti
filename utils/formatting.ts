@@ -1,5 +1,3 @@
-// Utility functions for formatting, validation, etc.
-
 /**
  * Format currency amount to Indonesian Rupiah format
  * @param amount - The amount to format
@@ -20,12 +18,10 @@ export const formatCurrency = (amount: number): string => {
  * @returns Properly formatted time string
  */
 export const formatTime = (timeStr: string): string => {
-  // Simple validation
   if (!timeStr || !timeStr.includes('.')) return timeStr
 
   const [hours, minutes] = timeStr.split('.')
 
-  // Add leading zeros if needed
   const formattedHours = hours.padStart(2, '0')
   const formattedMinutes = minutes.padStart(2, '0')
 
@@ -34,8 +30,8 @@ export const formatTime = (timeStr: string): string => {
 
 /**
  * Calculate time difference between current time and given time
- * @param timeStr - Time string in format "HH.MM"
- * @returns Duration in minutes
+ * @param timeStr
+ * @returns
  */
 export const calculateTimeDifference = (timeStr: string): number => {
   if (!timeStr || !timeStr.includes('.')) return 0
@@ -46,7 +42,6 @@ export const calculateTimeDifference = (timeStr: string): number => {
 
   const currentTime = new Date()
 
-  // Handle case when entry was yesterday
   if (entryTime > currentTime) {
     entryTime.setDate(entryTime.getDate() - 1)
   }

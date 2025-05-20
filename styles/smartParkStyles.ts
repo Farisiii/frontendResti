@@ -8,10 +8,8 @@ import {
   ViewStyle,
 } from 'react-native'
 
-// Get screen dimensions
 const { width, height } = Dimensions.get('window')
 
-// Define style types
 interface SmartParkStyles {
   container: ViewStyle
   header: ViewStyle
@@ -38,25 +36,25 @@ interface SmartParkStyles {
 }
 
 export const colors = {
-  primary: '#E32636', // Red color for headers
-  secondary: '#FFD700', // Gold color for buttons
-  background: '#FAF1E2', // Light cream background
-  success: '#00A86B', // Green for "masuk" status
-  error: '#FF3B30', // Red for "keluar" status
-  text: '#000000', // Black for main text
-  textSecondary: '#777777', // Gray for secondary text
-  border: '#dddddd', // Light gray for borders
-  white: '#FFFFFF', // White
+  primary: '#E32636',
+  secondary: '#FFD700',
+  background: '#FAF1E2',
+  success: '#00A86B',
+  error: '#FF3B30',
+  text: '#000000',
+  textSecondary: '#777777',
+  border: '#dddddd',
+  white: '#FFFFFF',
 }
 
-// Create and export styles
 export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    maxWidth: 480, // Restrict max width for web
+    maxWidth: 480,
     width: '100%',
     alignSelf: 'center',
+    marginBottom: 20,
     ...(Platform.OS === 'web'
       ? {
           height: Platform.select({ web: '100vh' }) as any,
@@ -77,13 +75,14 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     }),
   },
   backButton: {
-    padding: 5,
+    padding: 4,
   },
   headerTitle: {
     color: colors.white,
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
+    paddingVertical: 5,
   },
   balanceContainer: {
     backgroundColor: colors.white,
@@ -171,9 +170,8 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     elevation: 1,
     position: 'relative',
     zIndex: 5,
-    maxHeight: height - 50,
-    bottom: 0, // Menempel di dasar layar
   },
+
   logRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -194,10 +192,10 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     fontWeight: '500',
   },
   logTypeTextIn: {
-    color: colors.success, // Green color for "masuk"
+    color: colors.success,
   },
   logTypeTextOut: {
-    color: colors.error, // Red color for "keluar"
+    color: colors.error,
   },
   logTimeText: {
     width: 60,

@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/GOsplash-icon.png",
+      "image": "./assets/images/GOicon.png",
       "resizeMode": "cover",
       "backgroundColor": "#F5F5F5",
       "dark": {

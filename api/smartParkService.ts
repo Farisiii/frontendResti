@@ -43,10 +43,6 @@ export const fetchActivityLog = async (): Promise<ActivityLogData> => {
             { id: 6, type: 'keluar', time: '00.30' },
             { id: 7, type: 'masuk', time: '09.30' },
             { id: 8, type: 'keluar', time: '10.30' },
-            { id: 9, type: 'masuk', time: '22.30' },
-            { id: 10, type: 'masuk', time: '00.30' },
-            { id: 11, type: 'keluar', time: '00.30' },
-            { id: 12, type: 'keluar', time: '00.30' },
           ],
         })
       }, 1200)

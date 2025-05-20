@@ -8,7 +8,6 @@ export type SmartParkScreenProps = {
   navigation?: any
 }
 
-// API response types
 export type UserData = {
   name: string
   balance: number

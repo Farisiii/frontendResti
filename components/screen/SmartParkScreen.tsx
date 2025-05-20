@@ -9,24 +9,20 @@ import {
   View,
 } from 'react-native'
 
-// Import components
-import ActionButtons from './ActionButtons'
-import ActivityLogList from './ActivityLogList'
-import BalanceCard from './BalanceCard'
-import Header from './Header'
+import Header from '../Header'
+import ActionButtons from '../home/ActionButtons'
+import ActivityLogList from '../home/ActivityLogList'
+import BalanceCard from '../home/BalanceCard'
+import { smartParkStyles } from '@/styles/smartParkStyles'
+import { useSmartParkData } from '../../hooks/useSmartParkData'
 
-// Import styles
-import { smartParkStyles } from '../styles/smartParkStyles'
-
-// Import hooks
-import { useSmartParkData } from '../hooks/useSmartParkData'
+import { handleCheckVehicle, handleTopUp } from '@/utils/navigation'
 
 type SmartParkScreenProps = {
   navigation?: any
 }
 
 export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
-  // Use the custom hook to manage data and state
   const {
     userName,
     balance,
@@ -38,25 +34,8 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
     refreshData,
   } = useSmartParkData()
 
-  const handleTopUp = () => {
-    // Implement top up functionality
-    console.log('Top up balance')
-    // Navigate to top up screen if needed
-    // navigation.navigate('TopUp')
-  }
-
-  const handleCheckVehicle = () => {
-    // Implement check vehicle functionality
-    console.log('Check vehicle')
-    // Navigate to vehicle status screen if needed
-    // navigation.navigate('VehicleStatus')
-  }
-
   const handleViewActivityLog = () => {
-    // Implement view full activity log functionality
     console.log('View full activity log')
-    // Navigate to full activity log screen if needed
-    // navigation.navigate('ActivityLog')
   }
 
   const handleBack = () => {
@@ -77,8 +56,8 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
         />
       )}
 
-      {/* Header with back button */}
-      <Header title="SmartPark Ganesha Operation" onBackPress={handleBack} />
+      {/* Header tanpa tombol back */}
+      <Header title="SmartPark Ganesha Operation" showBackButton={false} />
 
       {isLoading ? (
         <View style={smartParkStyles.loadingContainer}>

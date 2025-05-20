@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import { smartParkStyles } from '../styles/smartParkStyles'
+import { smartParkStyles } from '../../styles/smartParkStyles'
 
 type ActionButtonsProps = {
   onTopUp: () => void

@@ -1,7 +1,7 @@
+import { smartParkStyles } from '@/styles/smartParkStyles'
 import React from 'react'
-import { Dimensions, ScrollView, Text, View } from 'react-native'
-import { smartParkStyles } from '../styles/smartParkStyles'
-import { ActivityLogItem } from '../types/smartPark'
+import { ScrollView, Text, View } from 'react-native'
+import { ActivityLogItem } from '../../types/smartPark'
 
 type ActivityLogListProps = {
   logs: ActivityLogItem[]
@@ -16,22 +16,6 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
   logs,
   onViewMore,
 }) => {
-  // Get screen dimensions to help determine max height for the log container
-  const { height } = Dimensions.get('window')
-
-  // Define the maximum number of items before scrolling
-  const MAX_VISIBLE_ITEMS = 10
-
-  // Define a single log item's approximate height (adjust as needed)
-  const ITEM_HEIGHT = 50
-
-  // Calculate the maximum height for the log container
-  // This ensures it won't take more than ~40% of screen height
-  const maxLogContainerHeight = Math.min(
-    MAX_VISIBLE_ITEMS * ITEM_HEIGHT,
-    height * 0.625
-  )
-
   if (logs.length === 0) {
     return (
       <View
@@ -51,12 +35,7 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
         <Text style={smartParkStyles.logButtonText}>Log Aktivitas</Text>
       </View>
 
-      <View
-        style={[
-          smartParkStyles.activityLogContainer,
-          { maxHeight: maxLogContainerHeight },
-        ]}
-      >
+      <View style={smartParkStyles.activityLogContainer}>
         <ScrollView
           showsVerticalScrollIndicator={true}
           contentContainerStyle={{ flexGrow: 1 }}
