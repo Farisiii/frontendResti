@@ -75,7 +75,10 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     }),
   },
   backButton: {
-    padding: 4,
+    padding: Platform.select({
+      android: 4,
+      default: 0,
+    }),
   },
   headerTitle: {
     color: colors.white,

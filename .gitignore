@@ -39,3 +39,5 @@ yarn-error.*
 app-example
 
 catatan.txt
+# Local Netlify folder
+.netlify
