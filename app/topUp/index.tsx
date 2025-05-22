@@ -1,4 +1,4 @@
-import TopUpScreen from '@/components/screen/TopUpScreen'
+import TopUpScreen from '@/screen/TopUpScreen'
 import { Stack } from 'expo-router'
 import React from 'react'
 

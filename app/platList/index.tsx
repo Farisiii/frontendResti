@@ -1,4 +1,4 @@
-import PlatListScreen from '@/components/screen/PlatListScreen'
+import PlatListScreen from '@/screen/PlatListScreen'
 import { Stack } from 'expo-router'
 import React from 'react'
 

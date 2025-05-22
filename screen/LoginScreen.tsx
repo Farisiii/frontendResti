@@ -17,7 +17,7 @@ import LogoHeader from '@/components/auth/LogoHeader'
 
 import { authStyles } from '@/styles/authStyles'
 
-import { loginUser } from '@/utils/authService'
+import { loginUser } from '@/utils/auth'
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState<string>('')

@@ -68,7 +68,9 @@ const Numpad: React.FC<NumpadProps> = ({
         {/* Complete button */}
         <TouchableOpacity
           style={[topUpStyles.actionButton, topUpStyles.completeButton]}
-          onPress={onComplete}
+          onPress={() => {
+            onComplete()
+          }}
         >
           <Text style={topUpStyles.actionButtonText}>OK</Text>
         </TouchableOpacity>

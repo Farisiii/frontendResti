@@ -1,17 +1,24 @@
 import { StatusBar } from 'expo-status-bar'
+import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 
 import { getVerificationDynamicStyles } from '@/styles/verificationDynamicStyles'
 import { handleTransactionComplete } from '@/utils/navigation'
 import { responsive } from '@/utils/responsive'
-import { useDimensions } from '../../hooks/useDimensions'
-import { styles } from '../../styles/verificationStyles'
-import SuccessIcon from '../verification/SuccessIcon'
-import TransactionDetails from '../verification/TransactionDetails'
+import SuccessIcon from '../components/verification/SuccessIcon'
+import TransactionDetails from '../components/verification/TransactionDetails'
+import { useDimensions } from '../hooks/useDimensions'
+import { styles } from '../styles/verificationStyles'
 
 const Verification: React.FC = () => {
   const { dimensions, isSmallScreen, isWeb, isPortrait } = useDimensions()
+
+  // Get amount from route params yang di-pass dari PinEntry
+  const { amount } = useLocalSearchParams<{ amount?: string }>()
+
+  // Default amount jika tidak ada
+  const transactionAmount = amount || '0'
 
   const dynamicStyles = getVerificationDynamicStyles()
 
@@ -38,8 +45,11 @@ const Verification: React.FC = () => {
               successIconStyle={[styles.successIcon, dynamicStyles.successIcon]}
             />
 
-            {/* Transaction Details */}
-            <TransactionDetails dynamicStyles={dynamicStyles} />
+            {/* Transaction Details - Pass amount */}
+            <TransactionDetails
+              dynamicStyles={dynamicStyles}
+              amount={transactionAmount}
+            />
           </View>
         </View>
       </View>

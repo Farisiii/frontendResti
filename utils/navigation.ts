@@ -26,12 +26,19 @@ export const handleTransactionComplete = (): void => {
   router.push('/smart-park')
 }
 
-export const handleComplete = () => {
-  router.push('/pinEntry')
+export const handleComplete = (amount?: string) => {
+  if (amount && amount !== 'undefined') {
+    router.push({
+      pathname: '/verification',
+      params: { amount },
+    })
+  } else {
+    return
+  }
 }
 
-export const handlePinTrue = () => {
-  router.push('/verification')
+export const handlePinTrue = (amount?: string) => {
+  router.push({ pathname: '/verification', params: { amount } })
 }
 
 export const handleSignUp = () => {

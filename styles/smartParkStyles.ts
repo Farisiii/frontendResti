@@ -14,6 +14,7 @@ interface SmartParkStyles {
   container: ViewStyle
   header: ViewStyle
   backButton: ViewStyle
+  logoutButton: ViewStyle // Tambahan untuk logout button
   headerTitle: TextStyle
   balanceContainer: ViewStyle
   balanceLabel: TextStyle
@@ -75,6 +76,12 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     }),
   },
   backButton: {
+    padding: Platform.select({
+      android: 4,
+      default: 0,
+    }),
+  },
+  logoutButton: {
     padding: Platform.select({
       android: 4,
       default: 0,

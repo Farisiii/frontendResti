@@ -1,4 +1,4 @@
-import PinEntryScreen from '@/components/screen/PinEntryScreen'
+import PinEntryScreen from '@/screen/PinEntryScreen'
 import { Stack } from 'expo-router'
 import React from 'react'
 

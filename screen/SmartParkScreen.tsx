@@ -9,14 +9,15 @@ import {
   View,
 } from 'react-native'
 
-import Header from '../Header'
-import ActionButtons from '../home/ActionButtons'
-import ActivityLogList from '../home/ActivityLogList'
-import BalanceCard from '../home/BalanceCard'
 import { smartParkStyles } from '@/styles/smartParkStyles'
-import { useSmartParkData } from '../../hooks/useSmartParkData'
+import Header from '../components/Header'
+import ActionButtons from '../components/home/ActionButtons'
+import ActivityLogList from '../components/home/ActivityLogList'
+import BalanceCard from '../components/home/BalanceCard'
+import { useSmartParkData } from '../hooks/useSmartParkData'
 
 import { handleCheckVehicle, handleTopUp } from '@/utils/navigation'
+import { router } from 'expo-router'
 
 type SmartParkScreenProps = {
   navigation?: any
@@ -34,9 +35,7 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
     refreshData,
   } = useSmartParkData()
 
-  const handleViewActivityLog = () => {
-    console.log('View full activity log')
-  }
+  const handleViewActivityLog = () => {}
 
   const handleBack = () => {
     if (navigation) {
@@ -57,7 +56,14 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
       )}
 
       {/* Header tanpa tombol back */}
-      <Header title="SmartPark Ganesha Operation" showBackButton={false} />
+      <Header
+        title="SmartPark Ganesha Operation"
+        showBackButton={false}
+        showLogoutButton={true}
+        onLogout={() => {
+          router.push('/login')
+        }}
+      />
 
       {isLoading ? (
         <View style={smartParkStyles.loadingContainer}>

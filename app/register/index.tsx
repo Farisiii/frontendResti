@@ -1,4 +1,4 @@
-import RegisterScreen from '@/components/screen/RegisterScreen'
+import RegisterScreen from '@/screen/RegisterScreen'
 import { Stack } from 'expo-router'
 import React from 'react'
 

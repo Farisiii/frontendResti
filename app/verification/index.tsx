@@ -1,4 +1,4 @@
-import Verification from '@/components/screen/Verification'
+import Verification from '@/screen/Verification'
 import { Stack } from 'expo-router'
 import React from 'react'
 

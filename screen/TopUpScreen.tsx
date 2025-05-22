@@ -7,23 +7,21 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { useDimensions } from '../../hooks/useDimensions'
-import {
-  formatCurrency,
-  getWholeNumber,
-  isValidAmount,
-} from '../../utils/currency'
-import { responsive } from '../../utils/responsive'
-import Header from '../Header'
-import AmountDisplay from '../topup/AmountDisplay'
-import ErrorModal from '../topup/ErrorModal'
-import Numpad from '../topup/Numpad'
-import PredefinedAmounts from '../topup/PredefinedAmounts'
+import Header from '../components/Header'
+import AmountDisplay from '../components/topup/AmountDisplay'
+import ErrorModal from '../components/topup/ErrorModal'
+import Numpad from '../components/topup/Numpad'
+import PredefinedAmounts from '../components/topup/PredefinedAmounts'
+import { useDimensions } from '../hooks/useDimensions'
+import { formatCurrency, isValidAmount } from '../utils/currency'
+import { responsive } from '../utils/responsive'
 
 const TopUpScreen: React.FC = () => {
   const { isSmallScreen, isWeb } = useDimensions()
-  const [amount, setAmount] = useState<string>('0,00')
-  const [selectedAmount, setSelectedAmount] = useState<number>(0)
+
+  // Changed: Use number for actual amount, string only for display
+  const [actualAmount, setActualAmount] = useState<number>(0)
+  const [displayAmount, setDisplayAmount] = useState<string>('0,00')
   const [dimensions, setDimensions] = useState(Dimensions.get('window'))
   const [isErrorModalVisible, setIsErrorModalVisible] = useState(false)
 
@@ -35,34 +33,37 @@ const TopUpScreen: React.FC = () => {
     return () => subscription?.remove()
   }, [])
 
+  const updateAmount = (newAmount: number) => {
+    setActualAmount(newAmount)
+    setDisplayAmount(formatCurrency(newAmount))
+  }
+
   const handleAmountSelection = (value: number) => {
-    setSelectedAmount(value)
-    setAmount(formatCurrency(value))
+    updateAmount(value)
   }
 
   const handleNumberPress = (num: number) => {
-    const currentWholeNumber = getWholeNumber(amount)
-    let newWholeNumber = currentWholeNumber * 10 + num
+    // Use actualAmount instead of parsing from display string
+    let newAmount = actualAmount * 10 + num
 
-    if (newWholeNumber >= 10000000000) {
+    // Prevent overflow
+    if (newAmount >= 10000000000) {
       return
     }
 
-    setSelectedAmount(newWholeNumber)
-    setAmount(formatCurrency(newWholeNumber))
+    updateAmount(newAmount)
   }
 
   const handleDeletePress = () => {
-    const currentWholeNumber = getWholeNumber(amount)
-    const newWholeNumber = Math.floor(currentWholeNumber / 10)
-
-    setSelectedAmount(newWholeNumber)
-    setAmount(formatCurrency(newWholeNumber))
+    // Use actualAmount directly instead of parsing
+    const newAmount = Math.floor(actualAmount / 10)
+    updateAmount(newAmount)
   }
 
   const validateAndComplete = () => {
-    if (isValidAmount(selectedAmount)) {
-      handleComplete()
+    // Validate the actual numeric amount
+    if (isValidAmount(actualAmount) && actualAmount > 0) {
+      handleComplete(actualAmount.toString())
     } else {
       setIsErrorModalVisible(true)
     }
@@ -100,11 +101,12 @@ const TopUpScreen: React.FC = () => {
             responsive.isLandscape() && styles.contentLandscape,
           ]}
         >
-          <AmountDisplay amount={amount} />
+          {/* Pass display amount to AmountDisplay */}
+          <AmountDisplay amount={displayAmount} />
 
           <PredefinedAmounts
             predefinedAmounts={predefinedAmounts}
-            selectedAmount={selectedAmount}
+            selectedAmount={actualAmount}
             onAmountSelection={handleAmountSelection}
           />
 

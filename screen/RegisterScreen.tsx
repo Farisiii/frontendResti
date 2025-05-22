@@ -20,7 +20,6 @@ export type User = {
   id: string
   username: string
   email: string
-  name: string
 }
 
 const EXISTING_USERS = [
@@ -28,7 +27,6 @@ const EXISTING_USERS = [
     id: '1',
     username: 'user123',
     email: 'user@gmail.com',
-    name: 'Regular User',
   },
 ]
 
@@ -111,7 +109,6 @@ export default function RegisterScreen() {
           id: newUserId,
           username: username,
           email: email,
-          name: username,
         }
 
         await AsyncStorage.setItem('userToken', newUser.id)

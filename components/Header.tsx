@@ -7,31 +7,51 @@ type HeaderProps = {
   title: string
   onBackPress?: () => void
   showBackButton?: boolean
+  onLogout?: () => void
+  showLogoutButton?: boolean
 }
 
 const Header: React.FC<HeaderProps> = ({
   title,
   onBackPress,
   showBackButton = true,
+  onLogout,
+  showLogoutButton = false,
 }) => {
   return (
     <View style={smartParkStyles.header}>
-      {showBackButton && onBackPress && (
+      {showBackButton && onBackPress ? (
         <TouchableOpacity
           style={smartParkStyles.backButton}
           onPress={onBackPress}
         >
           <Ionicons name="chevron-back" size={24} color="white" />
         </TouchableOpacity>
+      ) : (
+        // Placeholder untuk menjaga spacing ketika tidak ada back button
+        <View style={smartParkStyles.backButton} />
       )}
+
       <Text
         style={[
           smartParkStyles.headerTitle,
-          !showBackButton && { textAlign: 'center', flex: 1 },
+          !showBackButton && { flex: 1, textAlign: 'center' },
         ]}
       >
         {title}
       </Text>
+
+      {showLogoutButton && onLogout ? (
+        <TouchableOpacity
+          style={smartParkStyles.logoutButton}
+          onPress={onLogout}
+        >
+          <Ionicons name="log-out-outline" size={24} color="white" />
+        </TouchableOpacity>
+      ) : (
+        // Placeholder untuk menjaga spacing ketika tidak ada logout button
+        <View style={smartParkStyles.logoutButton} />
+      )}
     </View>
   )
 }

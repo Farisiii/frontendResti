@@ -1,4 +1,4 @@
-import LoginScreen from '@/components/screen/LoginScreen'
+import LoginScreen from '@/screen/LoginScreen'
 import { Stack } from 'expo-router'
 import React from 'react'
 

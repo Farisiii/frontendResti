@@ -1,6 +1,7 @@
 import { useDimensions } from '@/hooks/useDimensions'
 import { styles } from '@/styles/pinEntryStyles'
 import { handleBackPress, handlePinTrue } from '@/utils/navigation'
+import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
   Alert,
@@ -11,14 +12,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import Header from '../Header'
-import Numpad from '../topup/Numpad'
+import Header from '../components/Header'
+import Numpad from '../components/topup/Numpad'
 
 const PinEntryScreen: React.FC = () => {
   const { isSmallScreen, isWeb } = useDimensions()
   const [pin, setPin] = useState<string>('')
   const [isError, setIsError] = useState<boolean>(false)
   const [dimensions, setDimensions] = useState(Dimensions.get('window'))
+
+  // Get amount from route params
+  const { amount } = useLocalSearchParams<{ amount?: string }>()
 
   const CORRECT_PIN = '123456'
 
@@ -44,7 +48,7 @@ const PinEntryScreen: React.FC = () => {
 
   const handleComplete = () => {
     if (pin === CORRECT_PIN) {
-      handlePinTrue()
+      handlePinTrue(amount)
     } else {
       setIsError(true)
       setPin('')

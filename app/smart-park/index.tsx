@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router'
 import React from 'react'
-import SmartParkScreen from '../../components/screen/SmartParkScreen'
+import SmartParkScreen from '@/screen/SmartParkScreen'
 
 /**
  * Smart Park screen rendered using expo-router
