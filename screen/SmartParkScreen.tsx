@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   ActivityIndicator,
   Platform,
@@ -7,21 +7,21 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native'
+} from "react-native";
 
-import { smartParkStyles } from '@/styles/smartParkStyles'
-import Header from '../components/Header'
-import ActionButtons from '../components/home/ActionButtons'
-import ActivityLogList from '../components/home/ActivityLogList'
-import BalanceCard from '../components/home/BalanceCard'
-import { useSmartParkData } from '../hooks/useSmartParkData'
+import { smartParkStyles } from "@/styles/smartParkStyles";
+import Header from "../components/Header";
+import ActionButtons from "../components/home/ActionButtons";
+import ActivityLogList from "../components/home/ActivityLogList";
+import BalanceCard from "../components/home/BalanceCard";
+import { useSmartParkData } from "../hooks/useSmartParkData";
 
-import { handleCheckVehicle, handleTopUp } from '@/utils/navigation'
-import { router } from 'expo-router'
+import { handleCheckVehicle, handleTopUp } from "@/utils/navigation";
+import { router } from "expo-router";
 
 type SmartParkScreenProps = {
-  navigation?: any
-}
+  navigation?: any;
+};
 
 export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
   const {
@@ -33,41 +33,33 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
     error,
     toggleBalanceVisibility,
     refreshData,
-  } = useSmartParkData()
+  } = useSmartParkData();
 
-  const handleViewActivityLog = () => {}
-
-  const handleBack = () => {
-    if (navigation) {
-      navigation.goBack()
-    } else {
-      console.log('No navigation prop provided')
-    }
-  }
+  const handleViewActivityLog = () => {};
 
   return (
     <SafeAreaView style={smartParkStyles.container}>
-      {Platform.OS !== 'web' && (
+      {Platform.OS !== "web" && (
         <StatusBar
-          backgroundColor="#E32636"
-          barStyle="light-content"
-          translucent={Platform.OS === 'android'}
+          backgroundColor='#E32636'
+          barStyle='light-content'
+          translucent={Platform.OS === "android"}
         />
       )}
 
       {/* Header tanpa tombol back */}
       <Header
-        title="SmartPark Ganesha Operation"
+        title='SmartPark Ganesha Operation'
         showBackButton={false}
         showLogoutButton={true}
         onLogout={() => {
-          router.push('/login')
+          router.push("/login");
         }}
       />
 
       {isLoading ? (
         <View style={smartParkStyles.loadingContainer}>
-          <ActivityIndicator size="large" color="#E32636" />
+          <ActivityIndicator size='large' color='#E32636' />
           <Text>Memuat data...</Text>
         </View>
       ) : error ? (
@@ -104,5 +96,5 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
         </>
       )}
     </SafeAreaView>
-  )
+  );
 }

@@ -1,96 +1,432 @@
-import { ActivityLogData, UserData } from '../types/smartPark'
+// utils/smartParkService.ts (Clean Version)
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
+import {
+  // UI Types
+  ActivityLogData,
+  UserData,
 
-// API calls for Smart Park feature
-// Replace with actual API implementation
+  // Backend Types
+  ApiResponse,
+  BackendUser,
+  BackendWallet,
+  ProfileResponse,
+  LoginResponse,
+  ParkingSession,
+
+  // Request/Response Types
+  AuthResponse,
+  TopUpResponse,
+  VehicleManagementResponse,
+  ParkingActionResponse,
+
+  // Constants
+  STORAGE_KEYS,
+  API_ENDPOINTS,
+  DEFAULT_VALUES,
+} from "../types/smartPark";
+
+// Configuration
+const BASE_URL = "https://smartpark-backend.vercel.app";
+
+// Create axios instance
+const apiClient: AxiosInstance = axios.create({
+  baseURL: BASE_URL,
+  timeout: DEFAULT_VALUES.API_TIMEOUT,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Request interceptor untuk menambahkan token
+apiClient.interceptors.request.use(
+  async (config) => {
+    const token = await AsyncStorage.getItem(STORAGE_KEYS.JWT_TOKEN);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Response interceptor untuk handle error
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Token expired, clear storage
+      await AsyncStorage.removeItem(STORAGE_KEYS.JWT_TOKEN);
+      await AsyncStorage.removeItem(STORAGE_KEYS.USER_DATA);
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Helper function untuk handle API responses
+const handleApiResponse = <T>(
+  apiCall: Promise<AxiosResponse<ApiResponse<T>>>
+): Promise<T> => {
+  return apiCall
+    .then((response) => {
+      if (response.data.status === "success") {
+        return response.data.data as T;
+      } else {
+        throw new Error(response.data.error || "API request failed");
+      }
+    })
+    .catch((error) => {
+      console.error("API Error:", error);
+      if (error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error(error.message || "Network error occurred");
+    });
+};
+
+// ===== USER DATA FUNCTIONS =====
+
 export const fetchUserData = async (): Promise<UserData> => {
   try {
-    // In a real application, this would be a fetch call to your backend
-    // For example:
-    // const response = await fetch('https://your-api.com/user-data', {
-    //   headers: { 'Authorization': `Bearer ${getToken()}` }
-    // });
-    // if (!response.ok) throw new Error('Failed to fetch user data');
-    // return await response.json();
+    const profileResponse = await handleApiResponse<ProfileResponse>(
+      apiClient.get<ApiResponse<ProfileResponse>>(API_ENDPOINTS.PROFILE)
+    );
 
-    // Mock API call for development
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          name: 'Dompet Kamu, Bihurin',
-          balance: 1250000,
-        })
-      }, 1000)
-    })
+    return {
+      name: profileResponse.user.username,
+      balance: profileResponse.wallet.current_balance,
+      email: profileResponse.user.email,
+      vehicles: profileResponse.user.vehicles,
+      rfid: profileResponse.user.rfid,
+      userID: profileResponse.user.userID,
+      role: profileResponse.user.role,
+    };
   } catch (error) {
-    console.error('Error fetching user data:', error)
-    throw error
+    console.error("Error fetching user data:", error);
+    throw error;
   }
-}
+};
 
 export const fetchActivityLog = async (): Promise<ActivityLogData> => {
   try {
-    // In a real application, this would be a fetch call to your backend
-    // Mock API call for development
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          logs: [
-            { id: 1, type: 'masuk', time: '09.30' },
-            { id: 2, type: 'keluar', time: '10.30' },
-            { id: 3, type: 'masuk', time: '22.30' },
-            { id: 4, type: 'masuk', time: '00.30' },
-            { id: 5, type: 'keluar', time: '00.30' },
-            { id: 6, type: 'keluar', time: '00.30' },
-            { id: 7, type: 'masuk', time: '09.30' },
-            { id: 8, type: 'keluar', time: '10.30' },
-          ],
-        })
-      }, 1200)
-    })
-  } catch (error) {
-    console.error('Error fetching activity log:', error)
-    throw error
-  }
-}
+    const historyResponse = await handleApiResponse<ParkingSession[]>(
+      apiClient.get<ApiResponse<ParkingSession[]>>(API_ENDPOINTS.HISTORY)
+    );
 
-// Additional API functions
-export const topUpBalance = async (
-  amount: number
-): Promise<{ success: boolean; newBalance: number }> => {
-  try {
-    // Mock API call for development
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          newBalance: 1250000 + amount,
-        })
-      }, 1000)
-    })
-  } catch (error) {
-    console.error('Error processing top up:', error)
-    throw error
-  }
-}
+    const logs = historyResponse.map((session, index) => ({
+      id: index + 1,
+      type: (session.out_date ? "keluar" : "masuk") as "masuk" | "keluar",
+      time: session.out_date
+        ? new Date(session.out_date).toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : new Date(session.in_date).toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+      vehicle_plate: session.vehicle_plate,
+      billing: session.total_billing,
+      status: session.payment_status,
+    }));
 
-export const checkVehicleStatus = async (): Promise<{
-  isParked: boolean
-  location?: string
-  entryTime?: string
-}> => {
-  try {
-    // Mock API call for development
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          isParked: true,
-          location: 'Lantai 2, Blok A5',
-          entryTime: '09.30',
-        })
-      }, 1000)
-    })
-  } catch (error) {
-    console.error('Error checking vehicle status:', error)
-    throw error
+    return { logs };
+  } catch (error: any) {
+    console.error("Error fetching activity log:", error);
+    if (error.message.includes("404") || error.message.includes("not found")) {
+      return { logs: [] };
+    }
+    throw error;
   }
-}
+};
+
+// ===== WALLET FUNCTIONS =====
+
+export const topUpBalance = async (amount: number): Promise<TopUpResponse> => {
+  try {
+    const response = await handleApiResponse<BackendWallet>(
+      apiClient.post<ApiResponse<BackendWallet>>(API_ENDPOINTS.TOPUP, {
+        amount,
+      })
+    );
+
+    return {
+      success: true,
+      newBalance: response.current_balance,
+    };
+  } catch (error) {
+    console.error("Error processing top up:", error);
+    throw error;
+  }
+};
+
+// ===== PARKING FUNCTIONS =====
+
+export const checkVehicleStatus = async () => {
+  try {
+    const response = await handleApiResponse<ParkingSession>(
+      apiClient.get<ApiResponse<ParkingSession>>(API_ENDPOINTS.ACTIVE)
+    );
+
+    if (response) {
+      return {
+        isParked: true,
+        location: "Smart Park Area",
+        entryTime: new Date(response.in_date).toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        vehicle_plate: response.vehicle_plate,
+        parkID: response.parkID,
+      };
+    } else {
+      return {
+        isParked: false,
+      };
+    }
+  } catch (error: any) {
+    if (error.message.includes("404") || error.message.includes("not found")) {
+      return {
+        isParked: false,
+      };
+    }
+    console.error("Error checking vehicle status:", error);
+    throw error;
+  }
+};
+
+export const checkInVehicle = async (
+  vehiclePlate: string
+): Promise<ParkingActionResponse> => {
+  try {
+    const userData = await AsyncStorage.getItem(STORAGE_KEYS.USER_DATA);
+    if (!userData) {
+      throw new Error("User data not found");
+    }
+
+    const user: BackendUser = JSON.parse(userData);
+    if (!user.rfid) {
+      throw new Error("RFID not assigned to user");
+    }
+
+    const response = await handleApiResponse<ParkingSession>(
+      apiClient.post<ApiResponse<ParkingSession>>(API_ENDPOINTS.CHECKIN, {
+        rfid: user.rfid,
+        vehicle_plate: vehiclePlate,
+      })
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Check-in error:", error);
+    return {
+      success: false,
+      error: error.message || "Check-in failed",
+    };
+  }
+};
+
+export const checkOutVehicle = async (
+  vehiclePlate: string
+): Promise<ParkingActionResponse> => {
+  try {
+    const userData = await AsyncStorage.getItem(STORAGE_KEYS.USER_DATA);
+    if (!userData) {
+      throw new Error("User data not found");
+    }
+
+    const user: BackendUser = JSON.parse(userData);
+    if (!user.rfid) {
+      throw new Error("RFID not assigned to user");
+    }
+
+    const response = await handleApiResponse<ParkingSession>(
+      apiClient.post<ApiResponse<ParkingSession>>(API_ENDPOINTS.CHECKOUT, {
+        rfid: user.rfid,
+        vehicle_plate: vehiclePlate,
+      })
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Check-out error:", error);
+    return {
+      success: false,
+      error: error.message || "Check-out failed",
+    };
+  }
+};
+
+// ===== AUTHENTICATION FUNCTIONS =====
+
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
+  try {
+    const response = await apiClient.post<ApiResponse<LoginResponse>>(
+      API_ENDPOINTS.LOGIN,
+      { email, password }
+    );
+
+    if (response.data.status === "success" && response.data.data) {
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.JWT_TOKEN,
+        response.data.data.token
+      );
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.USER_DATA,
+        JSON.stringify(response.data.data.user)
+      );
+
+      return {
+        success: true,
+        user: response.data.data.user,
+        token: response.data.data.token,
+      };
+    } else {
+      return {
+        success: false,
+        error: response.data.error || "Login failed",
+      };
+    }
+  } catch (error: any) {
+    console.error("Login error:", error);
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Network error",
+    };
+  }
+};
+
+export const registerUser = async (userData: {
+  username: string;
+  email: string;
+  password: string;
+  vehicles?: Array<{ plate: string; description: string }>;
+}): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const response = await apiClient.post<ApiResponse<BackendUser>>(
+      API_ENDPOINTS.REGISTER,
+      userData
+    );
+
+    if (response.data.status === "success") {
+      return { success: true };
+    } else {
+      return {
+        success: false,
+        error: response.data.error || "Registration failed",
+      };
+    }
+  } catch (error: any) {
+    console.error("Registration error:", error);
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Network error",
+    };
+  }
+};
+
+// ===== VEHICLE MANAGEMENT FUNCTIONS =====
+
+export const addVehicle = async (
+  plate: string,
+  description: string = ""
+): Promise<VehicleManagementResponse> => {
+  try {
+    const response = await handleApiResponse<BackendUser>(
+      apiClient.post<ApiResponse<BackendUser>>(API_ENDPOINTS.VEHICLE, {
+        plate,
+        description,
+      })
+    );
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.USER_DATA,
+      JSON.stringify(response)
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Add vehicle error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to add vehicle",
+    };
+  }
+};
+
+export const removeVehicle = async (
+  plate: string
+): Promise<VehicleManagementResponse> => {
+  try {
+    const response = await handleApiResponse<BackendUser>(
+      apiClient.delete<ApiResponse<BackendUser>>(
+        `${API_ENDPOINTS.VEHICLE}/${plate}`
+      )
+    );
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.USER_DATA,
+      JSON.stringify(response)
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Remove vehicle error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to remove vehicle",
+    };
+  }
+};
+
+// ===== UTILITY FUNCTIONS =====
+
+export const isUserLoggedIn = async (): Promise<boolean> => {
+  const token = await AsyncStorage.getItem(STORAGE_KEYS.JWT_TOKEN);
+  return !!token;
+};
+
+export const logoutUser = async (): Promise<void> => {
+  await AsyncStorage.removeItem(STORAGE_KEYS.JWT_TOKEN);
+  await AsyncStorage.removeItem(STORAGE_KEYS.USER_DATA);
+};
+
+export const getCurrentUser = async (): Promise<BackendUser | null> => {
+  try {
+    const userData = await AsyncStorage.getItem(STORAGE_KEYS.USER_DATA);
+    return userData ? JSON.parse(userData) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const refreshUserData = async (): Promise<void> => {
+  try {
+    const profileResponse = await handleApiResponse<ProfileResponse>(
+      apiClient.get<ApiResponse<ProfileResponse>>(API_ENDPOINTS.PROFILE)
+    );
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.USER_DATA,
+      JSON.stringify(profileResponse.user)
+    );
+  } catch (error) {
+    console.error("Error refreshing user data:", error);
+    throw error;
+  }
+};

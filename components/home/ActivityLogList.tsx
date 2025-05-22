@@ -1,12 +1,12 @@
-import { smartParkStyles } from '@/styles/smartParkStyles'
-import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
-import { ActivityLogItem } from '../../types/smartPark'
+import { smartParkStyles } from "@/styles/smartParkStyles";
+import React from "react";
+import { ScrollView, Text, View } from "react-native";
+import { ActivityLogItem } from "../../types/smartPark";
 
 type ActivityLogListProps = {
-  logs: ActivityLogItem[]
-  onViewMore?: () => void
-}
+  logs: ActivityLogItem[];
+  onViewMore?: () => void;
+};
 
 /**
  * Activity Log List component for showing vehicle entry/exit history
@@ -16,25 +16,28 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
   logs,
   onViewMore,
 }) => {
-  if (logs.length === 0) {
+  const hasLogs = logs && logs.length > 0;
+
+  if (!hasLogs) {
     return (
-      <View
-        style={[
-          smartParkStyles.activityLogContainer,
-          { justifyContent: 'center', alignItems: 'center', padding: 20 },
-        ]}
-      >
-        <Text>Belum ada aktivitas kendaraan</Text>
+      <View style={smartParkStyles.activityLogContainerEmpty}>
+        <View style={smartParkStyles.emptyStateContainer}>
+          <Text style={smartParkStyles.emptyStateText}>
+            Belum ada aktivitas kendaraan
+          </Text>
+        </View>
       </View>
-    )
+    );
   }
 
   return (
     <>
-      <View style={smartParkStyles.logButton}>
+      {/* Log Button - hanya tampil ketika ada logs */}
+      <View style={smartParkStyles.logButtonActive}>
         <Text style={smartParkStyles.logButtonText}>Log Aktivitas</Text>
       </View>
 
+      {/* Activity Log Container dengan logs */}
       <View style={smartParkStyles.activityLogContainer}>
         <ScrollView
           showsVerticalScrollIndicator={true}
@@ -44,16 +47,14 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
             <View key={item.id} style={smartParkStyles.logRow}>
               <Text style={smartParkStyles.logIdText}>{item.id}</Text>
               <Text
-                style={
-                  [
-                    smartParkStyles.logTypeText,
-                    item.type === 'masuk'
-                      ? smartParkStyles.logTypeTextIn
-                      : smartParkStyles.logTypeTextOut,
-                  ] as any
-                }
+                style={[
+                  smartParkStyles.logTypeText,
+                  item.type === "masuk"
+                    ? smartParkStyles.logTypeTextIn
+                    : smartParkStyles.logTypeTextOut,
+                ]}
               >
-                Kendaraan {item.type === 'masuk' ? 'Masuk' : 'Keluar'}
+                Kendaraan {item.type === "masuk" ? "Masuk" : "Keluar"}
               </Text>
               <Text style={smartParkStyles.logTimeText}>{item.time}</Text>
             </View>
@@ -61,7 +62,7 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
         </ScrollView>
       </View>
     </>
-  )
-}
+  );
+};
 
-export default ActivityLogList
+export default ActivityLogList;
