@@ -317,9 +317,9 @@ export const API_ENDPOINTS = {
   ADMIN_HISTORY: "/api/parking/admin/history",
 
   // Wallet endpoints
-  BALANCE: "/api/wallet/balance",
-  TOPUP: "/api/wallet/topup",
-  ADMIN_TOPUP: "/api/wallet/admin/topup",
+  BALANCE: "/api/wallets/balance",
+  TOPUP: "/api/wallets/topup",
+  ADMIN_TOPUP: "/api/wallets/admin/topup",
 } as const;
 
 // Default values

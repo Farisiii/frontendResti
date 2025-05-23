@@ -1,12 +1,12 @@
-import { Ionicons } from '@expo/vector-icons'
-import React from 'react'
-import { Modal, Text, TouchableOpacity, View } from 'react-native'
-import { topUpStyles } from '../../styles/topupStyles'
-import { responsive } from '../../utils/responsive'
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { topUpStyles } from "../../styles/topupStyles";
+import { responsive } from "../../utils/responsive";
 
 interface ErrorModalProps {
-  visible: boolean
-  onClose: () => void
+  visible: boolean;
+  onClose: () => void;
 }
 
 const ErrorModal: React.FC<ErrorModalProps> = ({ visible, onClose }) => {
@@ -14,7 +14,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ visible, onClose }) => {
     <Modal
       visible={visible}
       transparent={true}
-      animationType="fade"
+      animationType='fade'
       onRequestClose={onClose}
     >
       <View style={topUpStyles.modalOverlay}>
@@ -25,9 +25,9 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ visible, onClose }) => {
 
           <View style={topUpStyles.modalBody}>
             <Ionicons
-              name="alert-circle-outline"
+              name='alert-circle-outline'
               size={responsive.scaledSize(48)}
-              color="#E62132"
+              color='#E62132'
               style={topUpStyles.warningIcon}
             />
             <Text style={topUpStyles.modalMessage}>
@@ -48,7 +48,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ visible, onClose }) => {
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
 
-export default ErrorModal
+export default ErrorModal;

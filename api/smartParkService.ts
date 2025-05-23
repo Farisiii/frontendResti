@@ -1,4 +1,4 @@
-// utils/smartParkService.ts (Clean Version)
+// api/smartParkService.ts (Updated Version)
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import {
@@ -32,7 +32,7 @@ const BASE_URL = "https://smartpark-backend.vercel.app";
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: DEFAULT_VALUES.API_TIMEOUT,
+  timeout: 30000, // Increase timeout to 30 seconds
   headers: {
     "Content-Type": "application/json",
   },
@@ -82,6 +82,77 @@ const handleApiResponse = <T>(
       }
       throw new Error(error.message || "Network error occurred");
     });
+};
+
+// ===== AUTHENTICATION FUNCTIONS =====
+
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
+  try {
+    const response = await apiClient.post<ApiResponse<LoginResponse>>(
+      API_ENDPOINTS.LOGIN,
+      { email, password }
+    );
+
+    if (response.data.status === "success" && response.data.data) {
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.JWT_TOKEN,
+        response.data.data.token
+      );
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.USER_DATA,
+        JSON.stringify(response.data.data.user)
+      );
+
+      return {
+        success: true,
+        user: response.data.data.user,
+        token: response.data.data.token,
+      };
+    } else {
+      return {
+        success: false,
+        error: response.data.error || "Login failed",
+      };
+    }
+  } catch (error: any) {
+    console.error("Login error:", error);
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Network error",
+    };
+  }
+};
+
+export const registerUser = async (userData: {
+  username: string;
+  email: string;
+  password: string;
+  vehicles?: Array<{ plate: string; description: string }>;
+}): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const response = await apiClient.post<ApiResponse<BackendUser>>(
+      API_ENDPOINTS.REGISTER,
+      userData
+    );
+
+    if (response.data.status === "success") {
+      return { success: true };
+    } else {
+      return {
+        success: false,
+        error: response.data.error || "Registration failed",
+      };
+    }
+  } catch (error: any) {
+    console.error("Registration error:", error);
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Network error",
+    };
+  }
 };
 
 // ===== USER DATA FUNCTIONS =====
@@ -144,18 +215,45 @@ export const fetchActivityLog = async (): Promise<ActivityLogData> => {
 
 export const topUpBalance = async (amount: number): Promise<TopUpResponse> => {
   try {
+    console.log(`Starting top up request for amount: ${amount}`);
+
     const response = await handleApiResponse<BackendWallet>(
       apiClient.post<ApiResponse<BackendWallet>>(API_ENDPOINTS.TOPUP, {
         amount,
       })
     );
 
+    console.log("Top up response received:", response);
+
     return {
       success: true,
       newBalance: response.current_balance,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error processing top up:", error);
+
+    // Enhanced error handling for different types of errors
+    if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
+      throw new Error(
+        "Request timeout - Please check your internet connection and try again"
+      );
+    } else if (
+      error.code === "ENOTFOUND" ||
+      error.message.includes("Network Error")
+    ) {
+      throw new Error(
+        "Unable to connect to server - Please check your internet connection"
+      );
+    } else if (error.response?.status === 500) {
+      throw new Error("Server error - Please try again later");
+    } else if (error.response?.status === 401) {
+      throw new Error("Authentication failed - Please login again");
+    } else if (error.response?.status === 403) {
+      throw new Error("Access denied - Please check your permissions");
+    } else if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    }
+
     throw error;
   }
 };
@@ -259,77 +357,6 @@ export const checkOutVehicle = async (
     return {
       success: false,
       error: error.message || "Check-out failed",
-    };
-  }
-};
-
-// ===== AUTHENTICATION FUNCTIONS =====
-
-export const loginUser = async (
-  email: string,
-  password: string
-): Promise<AuthResponse> => {
-  try {
-    const response = await apiClient.post<ApiResponse<LoginResponse>>(
-      API_ENDPOINTS.LOGIN,
-      { email, password }
-    );
-
-    if (response.data.status === "success" && response.data.data) {
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.JWT_TOKEN,
-        response.data.data.token
-      );
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.USER_DATA,
-        JSON.stringify(response.data.data.user)
-      );
-
-      return {
-        success: true,
-        user: response.data.data.user,
-        token: response.data.data.token,
-      };
-    } else {
-      return {
-        success: false,
-        error: response.data.error || "Login failed",
-      };
-    }
-  } catch (error: any) {
-    console.error("Login error:", error);
-    return {
-      success: false,
-      error: error.response?.data?.error || error.message || "Network error",
-    };
-  }
-};
-
-export const registerUser = async (userData: {
-  username: string;
-  email: string;
-  password: string;
-  vehicles?: Array<{ plate: string; description: string }>;
-}): Promise<{ success: boolean; error?: string }> => {
-  try {
-    const response = await apiClient.post<ApiResponse<BackendUser>>(
-      API_ENDPOINTS.REGISTER,
-      userData
-    );
-
-    if (response.data.status === "success") {
-      return { success: true };
-    } else {
-      return {
-        success: false,
-        error: response.data.error || "Registration failed",
-      };
-    }
-  } catch (error: any) {
-    console.error("Registration error:", error);
-    return {
-      success: false,
-      error: error.response?.data?.error || error.message || "Network error",
     };
   }
 };
