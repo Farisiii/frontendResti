@@ -116,13 +116,6 @@ const TopUpScreen: React.FC = () => {
 
           // Navigate to verification page with amount
           handleComplete(amountString);
-
-          // Handle unsuccessful response
-          Alert.alert(
-            "Top Up Gagal",
-            "Transaksi tidak berhasil. Silakan coba lagi.",
-            [{ text: "OK" }]
-          );
         }
       } else {
         // Handle unexpected response format
