@@ -33,6 +33,24 @@ export interface UserData {
   role?: "user" | "admin";
 }
 
+// types/smartPark.ts (Complete Version)
+
+// ===== UI/Frontend Interfaces =====
+
+// Interface untuk User Data yang digunakan di UI
+export interface UserData {
+  name: string;
+  balance: number;
+  // Additional fields from backend
+  email?: string;
+  vehicles?: Vehicle[];
+  rfid?: string;
+  userID?: string;
+  role?: "user" | "admin";
+  created_at?: string;
+  updated_at?: string;
+}
+
 // Interface untuk Vehicle
 export interface Vehicle {
   plate: string;
@@ -315,6 +333,7 @@ export const API_ENDPOINTS = {
   ACTIVE: "/api/parking/active",
   ADMIN_ACTIVE: "/api/parking/admin/active",
   ADMIN_HISTORY: "/api/parking/admin/history",
+  MIGRATE_VEHICLES: "/api/users/migrate-vehicles",
 
   // Wallet endpoints
   BALANCE: "/api/wallets/balance",

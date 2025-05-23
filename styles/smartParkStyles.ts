@@ -11,33 +11,31 @@ import {
 const { width, height } = Dimensions.get("window");
 
 interface SmartParkStyles {
-  container: ViewStyle;
-  header: ViewStyle;
-  backButton: ViewStyle;
-  logoutButton: ViewStyle;
-  headerTitle: TextStyle;
-  balanceContainer: ViewStyle;
-  balanceLabel: TextStyle;
-  balanceRow: ViewStyle;
-  balanceAmount: TextStyle;
-  actionButtonsContainer: ViewStyle;
-  actionButton: ViewStyle;
-  actionButtonText: TextStyle;
-  logButton: ViewStyle;
-  logButtonActive: ViewStyle; // Tambahan untuk state ketika ada log
-  logButtonText: TextStyle;
-  activityLogContainer: ViewStyle;
-  activityLogContainerEmpty: ViewStyle; // Tambahan untuk state kosong
-  logRow: ViewStyle;
-  logIdText: TextStyle;
-  logTypeText: TextStyle;
-  logTypeTextIn: TextStyle;
-  logTypeTextOut: TextStyle;
-  logTimeText: TextStyle;
-  loadingContainer: ViewStyle;
-  errorText: TextStyle;
-  emptyStateContainer: ViewStyle; // Tambahan untuk empty state
-  emptyStateText: TextStyle; // Tambahan untuk empty state text
+  container: ViewStyle
+  header: ViewStyle
+  backButton: ViewStyle
+  logoutButton: ViewStyle
+  rightSection: ViewStyle
+  profileButton: ViewStyle
+  headerTitle: TextStyle
+  balanceContainer: ViewStyle
+  balanceLabel: TextStyle
+  balanceRow: ViewStyle
+  balanceAmount: TextStyle
+  actionButtonsContainer: ViewStyle
+  actionButton: ViewStyle
+  actionButtonText: TextStyle
+  logButton: ViewStyle
+  logButtonText: TextStyle
+  activityLogContainer: ViewStyle
+  logRow: ViewStyle
+  logIdText: TextStyle
+  logTypeText: TextStyle
+  logTypeTextIn: TextStyle
+  logTypeTextOut: TextStyle
+  logTimeText: TextStyle
+  loadingContainer: ViewStyle
+  errorText: TextStyle
 }
 
 export const colors = {
@@ -80,23 +78,48 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     }),
   },
   backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: Platform.select({
       android: 4,
       default: 0,
     }),
   },
   logoutButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
     padding: Platform.select({
       android: 4,
       default: 0,
     }),
   },
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: 40,
+  },
+  profileButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+    marginRight: 8,
+  },
   headerTitle: {
+    flex: 1,
     color: colors.white,
     fontSize: 18,
-    fontWeight: "bold",
-    marginLeft: 10,
-    paddingVertical: 5,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingHorizontal: 10,
   },
   balanceContainer: {
     backgroundColor: colors.white,
@@ -193,8 +216,8 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     marginHorizontal: 15,
     borderRadius: 10,
     paddingTop: 30,
-    marginTop: -25, // Hanya untuk ketika ada log
-    shadowColor: "#000",
+    marginTop: 0,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,

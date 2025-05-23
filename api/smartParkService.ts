@@ -4,26 +4,23 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 import {
   // UI Types
   ActivityLogData,
-  UserData,
-
+  API_ENDPOINTS,
   // Backend Types
   ApiResponse,
-  BackendUser,
-  BackendWallet,
-  ProfileResponse,
-  LoginResponse,
-  ParkingSession,
-
   // Request/Response Types
   AuthResponse,
-  TopUpResponse,
-  VehicleManagementResponse,
+  BackendUser,
+  BackendWallet,
+  DEFAULT_VALUES,
+  LoginResponse,
   ParkingActionResponse,
-
+  ParkingSession,
+  ProfileResponse,
   // Constants
   STORAGE_KEYS,
-  API_ENDPOINTS,
-  DEFAULT_VALUES,
+  TopUpResponse,
+  UserData,
+  VehicleManagementResponse,
 } from "../types/smartPark";
 
 // Configuration
@@ -84,76 +81,76 @@ const handleApiResponse = <T>(
     });
 };
 
-// ===== AUTHENTICATION FUNCTIONS =====
+// // ===== AUTHENTICATION FUNCTIONS =====
 
-export const loginUser = async (
-  email: string,
-  password: string
-): Promise<AuthResponse> => {
-  try {
-    const response = await apiClient.post<ApiResponse<LoginResponse>>(
-      API_ENDPOINTS.LOGIN,
-      { email, password }
-    );
+// export const loginUser = async (
+//   email: string,
+//   password: string
+// ): Promise<AuthResponse> => {
+//   try {
+//     const response = await apiClient.post<ApiResponse<LoginResponse>>(
+//       API_ENDPOINTS.LOGIN,
+//       { email, password }
+//     );
 
-    if (response.data.status === "success" && response.data.data) {
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.JWT_TOKEN,
-        response.data.data.token
-      );
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.USER_DATA,
-        JSON.stringify(response.data.data.user)
-      );
+//     if (response.data.status === "success" && response.data.data) {
+//       await AsyncStorage.setItem(
+//         STORAGE_KEYS.JWT_TOKEN,
+//         response.data.data.token
+//       );
+//       await AsyncStorage.setItem(
+//         STORAGE_KEYS.USER_DATA,
+//         JSON.stringify(response.data.data.user)
+//       );
 
-      return {
-        success: true,
-        user: response.data.data.user,
-        token: response.data.data.token,
-      };
-    } else {
-      return {
-        success: false,
-        error: response.data.error || "Login failed",
-      };
-    }
-  } catch (error: any) {
-    console.error("Login error:", error);
-    return {
-      success: false,
-      error: error.response?.data?.error || error.message || "Network error",
-    };
-  }
-};
+//       return {
+//         success: true,
+//         user: response.data.data.user,
+//         token: response.data.data.token,
+//       };
+//     } else {
+//       return {
+//         success: false,
+//         error: response.data.error || "Login failed",
+//       };
+//     }
+//   } catch (error: any) {
+//     console.error("Login error:", error);
+//     return {
+//       success: false,
+//       error: error.response?.data?.error || error.message || "Network error",
+//     };
+//   }
+// };
 
-export const registerUser = async (userData: {
-  username: string;
-  email: string;
-  password: string;
-  vehicles?: Array<{ plate: string; description: string }>;
-}): Promise<{ success: boolean; error?: string }> => {
-  try {
-    const response = await apiClient.post<ApiResponse<BackendUser>>(
-      API_ENDPOINTS.REGISTER,
-      userData
-    );
+// export const registerUser = async (userData: {
+//   username: string;
+//   email: string;
+//   password: string;
+//   vehicles?: Array<{ plate: string; description: string }>;
+// }): Promise<{ success: boolean; error?: string }> => {
+//   try {
+//     const response = await apiClient.post<ApiResponse<BackendUser>>(
+//       API_ENDPOINTS.REGISTER,
+//       userData
+//     );
 
-    if (response.data.status === "success") {
-      return { success: true };
-    } else {
-      return {
-        success: false,
-        error: response.data.error || "Registration failed",
-      };
-    }
-  } catch (error: any) {
-    console.error("Registration error:", error);
-    return {
-      success: false,
-      error: error.response?.data?.error || error.message || "Network error",
-    };
-  }
-};
+//     if (response.data.status === "success") {
+//       return { success: true };
+//     } else {
+//       return {
+//         success: false,
+//         error: response.data.error || "Registration failed",
+//       };
+//     }
+//   } catch (error: any) {
+//     console.error("Registration error:", error);
+//     return {
+//       success: false,
+//       error: error.response?.data?.error || error.message || "Network error",
+//     };
+//   }
+// };
 
 // ===== USER DATA FUNCTIONS =====
 
@@ -361,6 +358,110 @@ export const checkOutVehicle = async (
   }
 };
 
+// ===== AUTHENTICATION FUNCTIONS =====
+
+export const loginUser = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
+  try {
+    const response = await apiClient.post<ApiResponse<LoginResponse>>(
+      API_ENDPOINTS.LOGIN,
+      { email, password }
+    );
+
+    if (response.data.status === "success" && response.data.data) {
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.JWT_TOKEN,
+        response.data.data.token
+      );
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.USER_DATA,
+        JSON.stringify(response.data.data.user)
+      );
+
+      return {
+        success: true,
+        user: response.data.data.user,
+        token: response.data.data.token,
+      };
+    } else {
+      return {
+        success: false,
+        error: response.data.error || "Login failed",
+      };
+    }
+  } catch (error: any) {
+    console.error("Login error:", error);
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Network error",
+    };
+  }
+};
+
+export const registerUser = async (userData: {
+  username: string;
+  email: string;
+  password: string;
+  vehicles?: Array<{ plate: string; description: string }>;
+  role?: "admin" | "user";
+}): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const response = await apiClient.post<ApiResponse<BackendUser>>(
+      API_ENDPOINTS.REGISTER,
+      userData
+    );
+
+    if (response.data.status === "success") {
+      return { success: true };
+    } else {
+      return {
+        success: false,
+        error: response.data.error || "Registration failed",
+      };
+    }
+  } catch (error: any) {
+    console.error("Registration error:", error);
+    return {
+      success: false,
+      error: error.response?.data?.error || error.message || "Network error",
+    };
+  }
+};
+
+export const updateProfile = async (profileData: {
+  username?: string;
+  email?: string;
+  password?: string;
+  vehicles?: Array<{ plate: string; description: string }>;
+}): Promise<VehicleManagementResponse> => {
+  try {
+    const response = await handleApiResponse<BackendUser>(
+      apiClient.put<ApiResponse<BackendUser>>(
+        API_ENDPOINTS.PROFILE,
+        profileData
+      )
+    );
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.USER_DATA,
+      JSON.stringify(response)
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Update profile error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to update profile",
+    };
+  }
+};
+
 // ===== VEHICLE MANAGEMENT FUNCTIONS =====
 
 export const addVehicle = async (
@@ -393,6 +494,36 @@ export const addVehicle = async (
   }
 };
 
+export const updateVehicleDescription = async (
+  plate: string,
+  description: string
+): Promise<VehicleManagementResponse> => {
+  try {
+    const response = await handleApiResponse<BackendUser>(
+      apiClient.put<ApiResponse<BackendUser>>(API_ENDPOINTS.VEHICLE, {
+        plate,
+        description,
+      })
+    );
+
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.USER_DATA,
+      JSON.stringify(response)
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Update vehicle description error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to update vehicle description",
+    };
+  }
+};
+
 export const removeVehicle = async (
   plate: string
 ): Promise<VehicleManagementResponse> => {
@@ -417,6 +548,159 @@ export const removeVehicle = async (
     return {
       success: false,
       error: error.message || "Failed to remove vehicle",
+    };
+  }
+};
+
+export const getUserVehicles = async (): Promise<{
+  success: boolean;
+  vehicles?: Array<{ plate: string; description: string }>;
+  error?: string;
+}> => {
+  try {
+    const userData = await getCurrentUser();
+    if (!userData) {
+      return {
+        success: false,
+        error: "User data not found",
+      };
+    }
+
+    return {
+      success: true,
+      vehicles: userData.vehicles || [],
+    };
+  } catch (error: any) {
+    console.error("Get user vehicles error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to get user vehicles",
+    };
+  }
+};
+
+export const isVehicleRegistered = async (plate: string): Promise<boolean> => {
+  try {
+    const userData = await getCurrentUser();
+    if (!userData || !userData.vehicles) {
+      return false;
+    }
+
+    return userData.vehicles.some((vehicle) => vehicle.plate === plate);
+  } catch (error) {
+    console.error("Error checking vehicle registration:", error);
+    return false;
+  }
+};
+
+// ===== ADMIN FUNCTIONS =====
+
+export const getAllUsers = async (): Promise<{
+  success: boolean;
+  data?: BackendUser[];
+  error?: string;
+}> => {
+  try {
+    const response = await handleApiResponse<BackendUser[]>(
+      apiClient.get<ApiResponse<BackendUser[]>>(API_ENDPOINTS.ALL_USERS)
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Get all users error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to fetch users",
+    };
+  }
+};
+
+export const addRfidToUser = async (
+  userID: string,
+  rfid: string
+): Promise<{
+  success: boolean;
+  data?: BackendUser;
+  error?: string;
+}> => {
+  try {
+    const response = await handleApiResponse<BackendUser>(
+      apiClient.post<ApiResponse<BackendUser>>(API_ENDPOINTS.ADMIN_RFID, {
+        userID,
+        rfid,
+      })
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Add RFID error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to add RFID",
+    };
+  }
+};
+
+export const removeRfidFromUser = async (
+  userID: string
+): Promise<{
+  success: boolean;
+  data?: BackendUser;
+  error?: string;
+}> => {
+  try {
+    const response = await handleApiResponse<BackendUser>(
+      apiClient.delete<ApiResponse<BackendUser>>(
+        `${API_ENDPOINTS.ADMIN_RFID}/${userID}`
+      )
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (error: any) {
+    console.error("Remove RFID error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to remove RFID",
+    };
+  }
+};
+
+export const migrateVehicleData = async (): Promise<{
+  success: boolean;
+  message?: string;
+  error?: string;
+}> => {
+  try {
+    const response = await apiClient.post<ApiResponse<{ message: string }>>(
+      API_ENDPOINTS.MIGRATE_VEHICLES
+    );
+
+    if (response.data.status === "success") {
+      return {
+        success: true,
+        message:
+          response.data.data?.message || "Migration completed successfully",
+      };
+    } else {
+      return {
+        success: false,
+        error: response.data.error || "Migration failed",
+      };
+    }
+  } catch (error: any) {
+    console.error("Migrate vehicle data error:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to migrate vehicle data",
     };
   }
 };
@@ -455,5 +739,33 @@ export const refreshUserData = async (): Promise<void> => {
   } catch (error) {
     console.error("Error refreshing user data:", error);
     throw error;
+  }
+};
+
+export const isUserAdmin = async (): Promise<boolean> => {
+  try {
+    const userData = await getCurrentUser();
+    return userData?.role === "admin";
+  } catch {
+    return false;
+  }
+};
+
+export const getStoredToken = async (): Promise<string | null> => {
+  try {
+    return await AsyncStorage.getItem(STORAGE_KEYS.JWT_TOKEN);
+  } catch {
+    return null;
+  }
+};
+
+export const clearUserData = async (): Promise<void> => {
+  try {
+    await AsyncStorage.multiRemove([
+      STORAGE_KEYS.JWT_TOKEN,
+      STORAGE_KEYS.USER_DATA,
+    ]);
+  } catch (error) {
+    console.error("Error clearing user data:", error);
   }
 };

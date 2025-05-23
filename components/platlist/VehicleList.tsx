@@ -1,31 +1,50 @@
 import PlatListStyles from '@/styles/PlatListStyles'
 import React from 'react'
-import { FlatList } from 'react-native'
-import { Vehicle } from '../../types/vehicle'
+import { FlatList, RefreshControl } from 'react-native'
 import { VehicleItem } from './VehicleItem'
 
+// Backend vehicle structure
+interface BackendVehicle {
+  plate: string
+  description: string
+}
+
 interface VehicleListProps {
-  vehicles: Vehicle[]
-  onEdit: (id: string) => void
-  onDelete: (id: string) => void
+  vehicles: BackendVehicle[]
+  onEdit: (plate: string) => void
+  onDelete: (plate: string) => void
+  onRefresh?: () => void
+  refreshing?: boolean
 }
 
 export const VehicleList: React.FC<VehicleListProps> = ({
   vehicles,
   onEdit,
   onDelete,
+  onRefresh,
+  refreshing = false,
 }) => {
-  const renderVehicleItem = ({ item }: { item: Vehicle }) => (
+  const renderVehicleItem = ({ item }: { item: BackendVehicle }) => (
     <VehicleItem vehicle={item} onEdit={onEdit} onDelete={onDelete} />
   )
 
   return (
     <FlatList
       data={vehicles}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.plate}
       renderItem={renderVehicleItem}
       contentContainerStyle={PlatListStyles.listContainer}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#4A90E2"
+            colors={['#4A90E2']}
+          />
+        ) : undefined
+      }
     />
   )
 }

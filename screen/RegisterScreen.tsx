@@ -12,11 +12,31 @@ import {
   View,
 } from "react-native";
 
-import InputField from "@/components/auth/InputField";
-import LogoHeader from "@/components/auth/LogoHeader";
-import { authStyles } from "@/styles/authStyles";
-import { registerUser } from "@/api/smartParkService";
-import type { RegistrationData } from "@/types/smartPark";
+import InputField from '@/components/auth/InputField'
+import LogoHeader from '@/components/auth/LogoHeader'
+import { authStyles } from '@/styles/authStyles'
+
+// Configuration
+const API_BASE_URL = 'https://smartpark-backend.vercel.app/api'
+
+export type User = {
+  userID: string
+  username: string
+  email: string
+  role: 'user' | 'admin'
+  vehicles: Array<{
+    plate: string
+    description: string
+  }>
+  rfid?: string
+}
+
+export type RegisterResponse = {
+  status: 'success' | 'error'
+  data?: User
+  message?: string
+  error?: string
+}
 
 export default function RegisterScreen() {
   const [username, setUsername] = useState<string>("");
@@ -65,8 +85,37 @@ export default function RegisterScreen() {
       return false;
     }
 
-    return true;
-  };
+    return true
+  }
+
+  const registerUser = async (): Promise<RegisterResponse> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          vehicles: [], // Default empty array, bisa ditambah nanti
+          role: 'user', // Default role
+        }),
+      })
+
+      const data: RegisterResponse = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Registration error:', error)
+      throw error
+    }
+  }
 
   const handleRegister = async () => {
     if (!validateRegistration()) {
@@ -76,75 +125,42 @@ export default function RegisterScreen() {
     setIsLoading(true);
 
     try {
-      const registrationData: RegistrationData = {
-        username: username.trim(),
-        email: email.trim().toLowerCase(),
-        password: password,
-        // Optional: bisa tambahkan vehicles jika diperlukan
-        vehicles: [],
-      };
+      const result = await registerUser()
 
-      console.log("Attempting registration with:", {
-        username: registrationData.username,
-        email: registrationData.email,
-        // Don't log password for security
-      });
+      if (result.status === 'success' && result.data) {
+        // Simpan data user ke AsyncStorage
+        await AsyncStorage.setItem('userData', JSON.stringify(result.data))
+        console.log('User data saved:', result.data)
+        router.push('/login')
 
-      const result = await registerUser(registrationData);
-
-      console.log("Register result:", result); // <-- Tambahkan log ini
-
-      if (!result.success) {
-        Alert.alert(
-          "Gagal Mendaftar",
-          result.error || "Terjadi kesalahan saat mendaftar. Silakan coba lagi."
-        );
-        return; // ⛔ Tambahkan ini untuk mencegah screen berubah
-      }
-
-      if (result.success) {
-        Alert.alert("Berhasil!", "Akun berhasil dibuat. Silakan login.");
-
-        // Navigasi langsung tanpa menunggu pengguna menekan OK
-        router.push("/login");
+        // Jika server juga mengembalikan token di registrasi, simpan juga
+        // await AsyncStorage.setItem('userToken', token)
       } else {
-        Alert.alert(
-          "Gagal Mendaftar",
-          result.error || "Terjadi kesalahan saat mendaftar. Silakan coba lagi."
-        );
+        Alert.alert('Error', result.message || 'Registrasi gagal')
       }
     } catch (error: any) {
-      console.error("Registration error:", error);
+      console.error('Registration error:', error)
 
-      // Handle specific error messages
-      let errorMessage = "Terjadi kesalahan jaringan. Silakan coba lagi.";
+      let errorMessage = 'Gagal membuat akun. Silakan coba lagi.'
 
       if (error.message) {
-        if (
-          error.message.includes("already exists") ||
-          error.message.includes("sudah terdaftar")
-        ) {
-          errorMessage =
-            "Email atau username sudah terdaftar. Silakan gunakan yang lain.";
-        } else if (
-          error.message.includes("Network Error") ||
-          error.message.includes("timeout")
-        ) {
-          errorMessage =
-            "Koneksi bermasalah. Periksa internet Anda dan coba lagi.";
-        } else if (error.message.includes("validation")) {
-          errorMessage =
-            "Data yang dimasukkan tidak valid. Periksa kembali formulir Anda.";
-        } else {
-          errorMessage = error.message;
-        }
+        errorMessage = error.message
       }
 
-      Alert.alert("Error", errorMessage);
+      // Handle specific error cases
+      if (error.message?.includes('Email already registered')) {
+        errorMessage = 'Email sudah terdaftar'
+      } else if (error.message?.includes('already registered')) {
+        errorMessage = 'Email atau username sudah digunakan'
+      } else if (error.message?.includes('Network')) {
+        errorMessage = 'Tidak dapat terhubung ke server'
+      }
+
+      Alert.alert('Error', errorMessage)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleBackToLogin = () => {
     router.push("/login");

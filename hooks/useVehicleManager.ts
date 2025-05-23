@@ -1,236 +1,134 @@
-import { useEffect, useState } from 'react'
-import { Vehicle } from '../types/vehicle'
+// hooks/useVehicleManager.ts
+import { useMemo, useState } from 'react'
 
 export const useVehicleManager = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([])
-  const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([])
+  const [vehicles, setVehicles] = useState<
+    Array<{ plate: string; description: string }>
+  >([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
-
   const [currentPlateNumber, setCurrentPlateNumber] = useState('')
   const [currentVehicleType, setCurrentVehicleType] = useState('')
-  const [currentVehicleId, setCurrentVehicleId] = useState<string | null>(null)
   const [plateNumberError, setPlateNumberError] = useState('')
   const [vehicleTypeError, setVehicleTypeError] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
+  const [editingPlate, setEditingPlate] = useState('')
 
-  useEffect(() => {
-    const fetchVehicles = async () => {
-      try {
-        const mockData: Vehicle[] = [
-          {
-            id: '1',
-            plateNumber: 'B 1111 AKE',
-            vehicleType: 'Supra Bapak',
-            ownerName: 'Budi Santoso',
-          },
-          {
-            id: '2',
-            plateNumber: 'D 5678 XYZ',
-            vehicleType: 'SUV',
-            ownerName: 'Ani Wijaya',
-          },
-          {
-            id: '3',
-            plateNumber: 'F 9012 DEF',
-            vehicleType: 'Hatchback',
-            ownerName: 'Citra Purnama',
-          },
-          {
-            id: '4',
-            plateNumber: 'B 3456 GHI',
-            vehicleType: 'MPV',
-            ownerName: 'Denny Pradana',
-          },
-          {
-            id: '5',
-            plateNumber: 'A 7890 JKL',
-            vehicleType: 'Pickup',
-            ownerName: 'Eka Saputra',
-          },
-          {
-            id: '6',
-            plateNumber: 'B 1111 AKE',
-            vehicleType: 'Supra Bapak',
-            ownerName: 'Fina Wulandari',
-          },
-          {
-            id: '7',
-            plateNumber: 'D 1357 PQR',
-            vehicleType: 'SUV',
-            ownerName: 'Galih Nugroho',
-          },
-          {
-            id: '8',
-            plateNumber: 'F 8642 STU',
-            vehicleType: 'MPV',
-            ownerName: 'Hana Permata',
-          },
-          {
-            id: '9',
-            plateNumber: 'B 9753 VWX',
-            vehicleType: 'Hatchback',
-            ownerName: 'Indra Kusuma',
-          },
-          {
-            id: '10',
-            plateNumber: 'B 1111 AKE',
-            vehicleType: 'Supra Bapak',
-            ownerName: 'Joko Widodo',
-          },
-        ]
-
-        setTimeout(() => {
-          setVehicles(mockData)
-          setFilteredVehicles(mockData)
-          setIsLoading(false)
-        }, 1000)
-      } catch (error) {
-        console.error('Error fetching vehicles:', error)
-        setIsLoading(false)
-      }
+  // Filter vehicles based on search query
+  const filteredVehicles = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return vehicles
     }
 
-    fetchVehicles()
-  }, [])
-
-  useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setFilteredVehicles(vehicles)
-    } else {
-      const lowercaseQuery = searchQuery.toLowerCase()
-      const filtered = vehicles.filter(
-        (vehicle) =>
-          vehicle.plateNumber.toLowerCase().includes(lowercaseQuery) ||
-          vehicle.vehicleType.toLowerCase().includes(lowercaseQuery)
-      )
-      setFilteredVehicles(filtered)
-    }
-  }, [searchQuery, vehicles])
-
-  const resetForm = () => {
-    setCurrentPlateNumber('')
-    setCurrentVehicleType('')
-    setCurrentVehicleId(null)
-    setPlateNumberError('')
-    setVehicleTypeError('')
-  }
-
-  const handleAddVehicle = () => {
-    resetForm()
-    setIsEditMode(false)
-  }
-
-  const handleEditVehicle = (vehicleId: string) => {
-    const selectedVehicle = vehicles.find((v) => v.id === vehicleId)
-
-    if (selectedVehicle) {
-      setCurrentPlateNumber(selectedVehicle.plateNumber)
-      setCurrentVehicleType(selectedVehicle.vehicleType)
-      setCurrentVehicleId(vehicleId)
-      setPlateNumberError('')
-      setVehicleTypeError('')
-      setIsEditMode(true)
-    }
-  }
-
-  const validateForm = (): boolean => {
-    let isValid = true
-
-    if (!currentPlateNumber.trim()) {
-      setPlateNumberError('Nomor plat tidak boleh kosong')
-      isValid = false
-    } else {
-      setPlateNumberError('')
-    }
-
-    if (!currentVehicleType.trim()) {
-      setVehicleTypeError('Jenis kendaraan tidak boleh kosong')
-      isValid = false
-    } else {
-      setVehicleTypeError('')
-    }
-
-    return isValid
-  }
-
-  const handleSaveVehicle = () => {
-    if (!validateForm()) return
-
-    if (isEditMode && currentVehicleId) {
-      const updatedVehicles = vehicles.map((vehicle) =>
-        vehicle.id === currentVehicleId
-          ? {
-              ...vehicle,
-              plateNumber: currentPlateNumber,
-              vehicleType: currentVehicleType,
-            }
-          : vehicle
-      )
-      setVehicles(updatedVehicles)
-      console.log(
-        'Updated Vehicle',
-        currentVehicleId,
-        currentPlateNumber,
-        currentVehicleType
-      )
-    } else {
-      const newVehicle: Vehicle = {
-        id: (vehicles.length + 1).toString(),
-        plateNumber: currentPlateNumber,
-        vehicleType: currentVehicleType,
-        ownerName: 'Pemilik Baru',
-      }
-      setVehicles([...vehicles, newVehicle])
-      console.log('Added New Vehicle', newVehicle)
-    }
-  }
-
-  const deleteVehicle = (vehicleId: string) => {
-    const updatedVehicles = vehicles.filter(
-      (vehicle) => vehicle.id !== vehicleId
+    return vehicles.filter(
+      (vehicle) =>
+        vehicle.plate.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        vehicle.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    setVehicles(updatedVehicles)
-    console.log('Deleted Vehicle', vehicleId)
-  }
+  }, [vehicles, searchQuery])
 
-  const handleSearchChange = (text: string) => {
-    setSearchQuery(text)
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query)
   }
 
   const clearSearch = () => {
     setSearchQuery('')
   }
 
+  const validatePlateNumber = (plate: string): string => {
+    if (!plate.trim()) {
+      return 'Nomor plat harus diisi'
+    }
+    if (plate.length < 3) {
+      return 'Nomor plat terlalu pendek'
+    }
+    return ''
+  }
+
+  const validateVehicleType = (type: string): string => {
+    if (!type.trim()) {
+      return 'Deskripsi kendaraan harus diisi'
+    }
+    return ''
+  }
+
   const handleChangePlateNumber = (text: string) => {
     setCurrentPlateNumber(text)
-    if (text.trim()) setPlateNumberError('')
+    const error = validatePlateNumber(text)
+    setPlateNumberError(error)
   }
 
   const handleChangeVehicleType = (text: string) => {
     setCurrentVehicleType(text)
-    if (text.trim()) setVehicleTypeError('')
+    const error = validateVehicleType(text)
+    setVehicleTypeError(error)
+  }
+
+  const handleAddVehicle = () => {
+    setIsEditMode(false)
+    setEditingPlate('')
+    setCurrentPlateNumber('')
+    setCurrentVehicleType('')
+    setPlateNumberError('')
+    setVehicleTypeError('')
+  }
+
+  const handleEditVehicle = (plate: string, currentDescription?: string) => {
+    setIsEditMode(true)
+    setEditingPlate(plate)
+    setCurrentPlateNumber(plate)
+    setCurrentVehicleType(currentDescription || '')
+    setPlateNumberError('')
+    setVehicleTypeError('')
+  }
+
+  const handleSaveVehicle = () => {
+    // Clear form after successful save
+    setCurrentPlateNumber('')
+    setCurrentVehicleType('')
+    setPlateNumberError('')
+    setVehicleTypeError('')
+    setIsEditMode(false)
+    setEditingPlate('')
+  }
+
+  const deleteVehicle = (plate: string) => {
+    setVehicles((prev) => prev.filter((vehicle) => vehicle.plate !== plate))
+  }
+
+  const addVehicle = (vehicle: { plate: string; description: string }) => {
+    setVehicles((prev) => [...prev, vehicle])
+  }
+
+  const updateVehicle = (plate: string, newDescription: string) => {
+    setVehicles((prev) =>
+      prev.map((vehicle) =>
+        vehicle.plate === plate
+          ? { ...vehicle, description: newDescription }
+          : vehicle
+      )
+    )
   }
 
   return {
     vehicles,
+    setVehicles,
     filteredVehicles,
     searchQuery,
-    isLoading,
+    handleSearchChange,
+    clearSearch,
     currentPlateNumber,
     currentVehicleType,
     plateNumberError,
     vehicleTypeError,
     isEditMode,
-
-    handleSearchChange,
-    clearSearch,
+    editingPlate,
+    handleChangePlateNumber,
+    handleChangeVehicleType,
     handleAddVehicle,
     handleEditVehicle,
     handleSaveVehicle,
     deleteVehicle,
-    handleChangePlateNumber,
-    handleChangeVehicleType,
-    resetForm,
+    addVehicle,
+    updateVehicle,
   }
 }
