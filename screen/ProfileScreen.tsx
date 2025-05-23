@@ -282,6 +282,10 @@ const ProfileScreen = () => {
           title="Profile"
           onBackPress={handleBackPress}
           showBackButton={true}
+          showLogoutButton={true}
+          onLogout={() => {
+            router.push('/login')
+          }}
         />
         <View style={profileStyles.errorContainer}>
           <View style={profileStyles.errorIconContainer}>
