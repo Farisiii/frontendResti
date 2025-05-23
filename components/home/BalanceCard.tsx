@@ -21,7 +21,9 @@ const BalanceCard: React.FC<BalanceCardProps> = ({
 }) => {
   return (
     <View style={smartParkStyles.balanceContainer}>
-      <Text style={smartParkStyles.balanceLabel}>Ini Saldo {userName}</Text>
+      <Text style={smartParkStyles.balanceLabel}>
+        Ini Saldo Dompet Kamu, {userName}
+      </Text>
       <View style={smartParkStyles.balanceRow}>
         <Text style={smartParkStyles.balanceAmount}>
           {hideBalance ? 'Rp XXX.XXX.XXX' : balance}

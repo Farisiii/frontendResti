@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   Platform,
   SafeAreaView,
   StatusBar,
@@ -16,6 +15,7 @@ import ActivityLogList from '../components/home/ActivityLogList'
 import BalanceCard from '../components/home/BalanceCard'
 import { useSmartParkData } from '../hooks/useSmartParkData'
 
+import { LoadingState } from '@/components/platlist/LoadingState'
 import { handleCheckVehicle, handleTopUp } from '@/utils/navigation'
 import { router } from 'expo-router'
 
@@ -55,21 +55,19 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
         />
       )}
 
-      {/* Header tanpa tombol back */}
+      {/* Header tanpa tombol back tapi dengan profile button */}
       <Header
-        title="SmartPark Ganesha Operation"
+        title="SmartPark GO"
         showBackButton={false}
         showLogoutButton={true}
+        showProfileButton={true}
         onLogout={() => {
           router.push('/login')
         }}
       />
 
       {isLoading ? (
-        <View style={smartParkStyles.loadingContainer}>
-          <ActivityIndicator size="large" color="#E32636" />
-          <Text>Memuat data...</Text>
-        </View>
+        <LoadingState />
       ) : error ? (
         <View style={smartParkStyles.loadingContainer}>
           <Text style={smartParkStyles.errorText}>{error}</Text>

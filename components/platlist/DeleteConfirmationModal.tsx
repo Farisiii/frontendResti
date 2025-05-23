@@ -1,22 +1,42 @@
 import PlatListStyles from '@/styles/PlatListStyles'
 import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
-import { Modal, Text, TouchableOpacity, View } from 'react-native'
-import { Vehicle } from '../../types/vehicle'
+import {
+  ActivityIndicator,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { responsive } from '../../utils/responsive'
+
+// Backend vehicle structure
+interface BackendVehicle {
+  plate: string
+  description: string
+}
 
 type DeleteConfirmationModalProps = {
   isVisible: boolean
-  vehicles: Vehicle[]
-  selectedVehicleId: string | null
+  vehicles: BackendVehicle[]
+  selectedVehicleId: string | null // Ini sekarang berisi plate number
+  isDeleting?: boolean // Add loading state prop
   onConfirm: () => void
   onCancel: () => void
 }
 
 export const DeleteConfirmationModal: React.FC<
   DeleteConfirmationModalProps
-> = ({ isVisible, vehicles, selectedVehicleId, onConfirm, onCancel }) => {
-  const selectedVehicle = vehicles.find((v) => v.id === selectedVehicleId)
+> = ({
+  isVisible,
+  vehicles,
+  selectedVehicleId,
+  isDeleting = false,
+  onConfirm,
+  onCancel,
+}) => {
+  // Cari vehicle berdasarkan plate (selectedVehicleId sekarang adalah plate)
+  const selectedVehicle = vehicles.find((v) => v.plate === selectedVehicleId)
 
   return (
     <Modal
@@ -44,10 +64,10 @@ export const DeleteConfirmationModal: React.FC<
             {selectedVehicle && (
               <View style={PlatListStyles.vehicleInfoContainer}>
                 <Text style={PlatListStyles.confirmPlateNumber}>
-                  {selectedVehicle.plateNumber}
+                  {selectedVehicle.plate}
                 </Text>
                 <Text style={PlatListStyles.confirmVehicleType}>
-                  {selectedVehicle.vehicleType}
+                  {selectedVehicle.description}
                 </Text>
               </View>
             )}
@@ -55,17 +75,38 @@ export const DeleteConfirmationModal: React.FC<
 
           <View style={PlatListStyles.modalFooter}>
             <TouchableOpacity
-              style={PlatListStyles.cancelButton}
+              style={[
+                PlatListStyles.cancelButton,
+                isDeleting && { opacity: 0.5 }, // Dim the button when deleting
+              ]}
               onPress={onCancel}
+              disabled={isDeleting} // Disable cancel button when deleting
             >
               <Text style={PlatListStyles.cancelButtonText}>Batal</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={PlatListStyles.confirmButton}
+              style={[
+                PlatListStyles.confirmButton,
+                isDeleting && { opacity: 0.7 }, // Dim the button when deleting
+              ]}
               onPress={onConfirm}
+              disabled={isDeleting} // Disable confirm button when deleting
             >
-              <Text style={PlatListStyles.confirmButtonText}>Ya, Hapus</Text>
+              {isDeleting ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <ActivityIndicator
+                    size="small"
+                    color="#FFFFFF"
+                    style={{ marginRight: 8 }}
+                  />
+                  <Text style={PlatListStyles.confirmButtonText}>
+                    Menghapus...
+                  </Text>
+                </View>
+              ) : (
+                <Text style={PlatListStyles.confirmButtonText}>Hapus</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>

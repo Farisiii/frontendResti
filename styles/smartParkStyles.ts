@@ -14,7 +14,9 @@ interface SmartParkStyles {
   container: ViewStyle
   header: ViewStyle
   backButton: ViewStyle
-  logoutButton: ViewStyle // Tambahan untuk logout button
+  logoutButton: ViewStyle
+  rightSection: ViewStyle
+  profileButton: ViewStyle
   headerTitle: TextStyle
   balanceContainer: ViewStyle
   balanceLabel: TextStyle
@@ -76,23 +78,48 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     }),
   },
   backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: Platform.select({
       android: 4,
       default: 0,
     }),
   },
   logoutButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
     padding: Platform.select({
       android: 4,
       default: 0,
     }),
   },
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: 40,
+  },
+  profileButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+    marginRight: 8,
+  },
   headerTitle: {
+    flex: 1,
     color: colors.white,
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
-    paddingVertical: 5,
+    textAlign: 'center',
+    paddingHorizontal: 10,
   },
   balanceContainer: {
     backgroundColor: colors.white,
@@ -172,7 +199,7 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     marginHorizontal: 15,
     borderRadius: 10,
     paddingTop: 30,
-    marginTop: -25,
+    marginTop: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -181,7 +208,6 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     position: 'relative',
     zIndex: 5,
   },
-
   logRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,

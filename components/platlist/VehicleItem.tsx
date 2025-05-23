@@ -1,12 +1,18 @@
+// VehicleItem.tsx - Updated untuk backend integration
 import PlatListStyles from '@/styles/PlatListStyles'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import { Vehicle } from '../../types/vehicle'
+
+// Backend vehicle structure
+interface BackendVehicle {
+  plate: string
+  description: string
+}
 
 interface VehicleItemProps {
-  vehicle: Vehicle
-  onEdit: (id: string) => void
-  onDelete: (id: string) => void
+  vehicle: BackendVehicle
+  onEdit: (plate: string) => void
+  onDelete: (plate: string) => void
 }
 
 export const VehicleItem: React.FC<VehicleItemProps> = ({
@@ -17,19 +23,23 @@ export const VehicleItem: React.FC<VehicleItemProps> = ({
   return (
     <View style={PlatListStyles.vehicleCard}>
       <View style={PlatListStyles.vehicleContent}>
-        <Text style={PlatListStyles.plateNumber}>{vehicle.plateNumber}</Text>
-        <Text style={PlatListStyles.vehicleType}>{vehicle.vehicleType}</Text>
+        <Text style={PlatListStyles.plateNumber}>{vehicle.plate}</Text>
+        <Text style={PlatListStyles.vehicleType}>
+          {vehicle.description || 'Tidak ada deskripsi'}
+        </Text>
       </View>
+
       <View style={PlatListStyles.buttonContainer}>
         <TouchableOpacity
           style={PlatListStyles.editButton}
-          onPress={() => onEdit(vehicle.id)}
+          onPress={() => onEdit(vehicle.plate)}
         >
           <Text style={PlatListStyles.editButtonText}>Edit</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={PlatListStyles.deleteButton}
-          onPress={() => onDelete(vehicle.id)}
+          onPress={() => onDelete(vehicle.plate)}
         >
           <Text style={PlatListStyles.deleteButtonText}>Hapus</Text>
         </TouchableOpacity>
