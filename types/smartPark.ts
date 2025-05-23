@@ -1,21 +1,16 @@
 export type ActivityLogItem = {
-  id: number;
-  type: "masuk" | "keluar";
-  time: string;
-};
+  id: number
+  type: 'masuk' | 'keluar'
+  time: string
+}
 
 export type SmartParkScreenProps = {
-  navigation?: any;
-};
-
-// export type UserData = {
-//   name: string
-//   balance: number
-// }
+  navigation?: any
+}
 
 export type ActivityLogData = {
-  logs: ActivityLogItem[];
-};
+  logs: ActivityLogItem[]
+}
 
 // types/smartPark.ts (Complete Version)
 
@@ -23,14 +18,14 @@ export type ActivityLogData = {
 
 // Interface untuk User Data yang digunakan di UI
 export interface UserData {
-  name: string;
-  balance: number;
+  name: string
+  balance: number
   // Additional fields from backend
-  email?: string;
-  vehicles?: Vehicle[];
-  rfid?: string;
-  userID?: string;
-  role?: "user" | "admin";
+  email?: string
+  vehicles?: Vehicle[]
+  rfid?: string
+  userID?: string
+  role?: 'user' | 'admin'
 }
 
 // types/smartPark.ts (Complete Version)
