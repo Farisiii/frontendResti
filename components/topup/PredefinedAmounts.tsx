@@ -1,11 +1,11 @@
-import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { topUpStyles } from '../../styles/topupStyles'
+import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { topUpStyles } from "../../styles/topupStyles";
 
 interface PredefinedAmountsProps {
-  predefinedAmounts: Array<{ label: string; value: number }>
-  selectedAmount: number
-  onAmountSelection: (value: number) => void
+  predefinedAmounts: Array<{ label: string; value: number }>;
+  selectedAmount: number;
+  onAmountSelection: (value: number) => void;
 }
 
 const PredefinedAmounts: React.FC<PredefinedAmountsProps> = ({
@@ -14,37 +14,31 @@ const PredefinedAmounts: React.FC<PredefinedAmountsProps> = ({
   onAmountSelection,
 }) => {
   return (
-    <View style={topUpStyles.predefinedAmountsContainer}>
-      <View style={topUpStyles.amountButtonsRow}>
-        {predefinedAmounts.slice(0, 3).map((item, index) => (
+    <View style={topUpStyles.optionsContainer}>
+      <View style={topUpStyles.optionsGrid}>
+        {predefinedAmounts.map((amount) => (
           <TouchableOpacity
-            key={index}
+            key={amount.value}
             style={[
-              topUpStyles.amountButton,
-              selectedAmount === item.value && topUpStyles.selectedAmountButton,
+              topUpStyles.optionButton,
+              selectedAmount === amount.value && topUpStyles.selectedOption,
             ]}
-            onPress={() => onAmountSelection(item.value)}
+            onPress={() => onAmountSelection(amount.value)}
           >
-            <Text style={topUpStyles.amountButtonText}>{item.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <View style={topUpStyles.amountButtonsRow}>
-        {predefinedAmounts.slice(3, 6).map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              topUpStyles.amountButton,
-              selectedAmount === item.value && topUpStyles.selectedAmountButton,
-            ]}
-            onPress={() => onAmountSelection(item.value)}
-          >
-            <Text style={topUpStyles.amountButtonText}>{item.label}</Text>
+            <Text
+              style={[
+                topUpStyles.optionText,
+                selectedAmount === amount.value &&
+                  topUpStyles.selectedOptionText,
+              ]}
+            >
+              {amount.label}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default PredefinedAmounts
+export default PredefinedAmounts;
