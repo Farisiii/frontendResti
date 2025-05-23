@@ -110,7 +110,7 @@ const ProfileScreen = () => {
   }
 
   const handleBackPress = () => {
-    router.back()
+    router.push('/smart-park')
   }
 
   const handleLogout = () => {

@@ -8,8 +8,8 @@ import { useDimensions } from '@/hooks/useDimensions'
 import { useModalManager } from '@/hooks/useModalManager'
 import { useVehicleManager } from '@/hooks/useVehicleManager'
 import PlatListStyles from '@/styles/PlatListStyles'
-import { handleBackPress } from '@/utils/navigation'
 import { useNavigation } from '@react-navigation/native'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, SafeAreaView, View } from 'react-native'
@@ -319,7 +319,7 @@ const PlatListScreen: React.FC = () => {
       <View style={PlatListStyles.headerContainer}>
         <Header
           title="Daftar Kendaraan"
-          onBackPress={() => handleBackPress(isWeb)}
+          onBackPress={() => router.push('/smart-park')}
         />
       </View>
 

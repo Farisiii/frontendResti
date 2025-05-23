@@ -1,21 +1,21 @@
-import React from "react";
-import { ActivityIndicator, Modal, Text, View } from "react-native";
-import { topUpStyles } from "../../styles/topupStyles";
+import React from 'react'
+import { ActivityIndicator, Modal, Text, View } from 'react-native'
+import { topUpStyles } from '../../styles/topupStyles'
 
 interface LoadingModalProps {
-  visible: boolean;
-  message?: string;
+  visible: boolean
+  message?: string
 }
 
 const LoadingModal: React.FC<LoadingModalProps> = ({
   visible,
-  message = "Memproses top up...",
+  message = 'Memproses top up...',
 }) => {
   return (
     <Modal
       visible={visible}
       transparent={true}
-      animationType='fade'
+      animationType="fade"
       onRequestClose={() => {}} // Prevent dismissal during loading
     >
       <View style={topUpStyles.modalOverlay}>
@@ -25,13 +25,13 @@ const LoadingModal: React.FC<LoadingModalProps> = ({
           </View>
 
           <View style={topUpStyles.loadingModalBody}>
-            <ActivityIndicator size='large' color='#E62132' />
+            <ActivityIndicator size="large" color="#E62132" />
             <Text style={topUpStyles.loadingText}>{message}</Text>
           </View>
         </View>
       </View>
     </Modal>
-  );
-};
+  )
+}
 
-export default LoadingModal;
+export default LoadingModal

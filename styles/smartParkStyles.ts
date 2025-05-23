@@ -220,7 +220,7 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     marginHorizontal: 15,
     borderRadius: 10,
     paddingTop: 30,
-    marginTop: 0,
+    marginTop: -25,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
