@@ -99,10 +99,10 @@ export const fetchUserData = async (): Promise<UserData> => {
       role: profileResponse.user.role,
     }
   } catch (error) {
-    console.error('Error fetching user data:', error)
-    throw error
+    console.error("Error fetching user data:", error);
+    throw error;
   }
-}
+};
 
 export const fetchActivityLog = async (): Promise<ActivityLogData> => {
   try {

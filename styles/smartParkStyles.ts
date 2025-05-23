@@ -1,4 +1,4 @@
-import Constants from 'expo-constants'
+import Constants from "expo-constants";
 import {
   Dimensions,
   Platform,
@@ -6,9 +6,9 @@ import {
   StyleSheet,
   TextStyle,
   ViewStyle,
-} from 'react-native'
+} from "react-native";
 
-const { width, height } = Dimensions.get('window')
+const { width, height } = Dimensions.get("window");
 
 interface SmartParkStyles {
   container: ViewStyle
@@ -39,35 +39,35 @@ interface SmartParkStyles {
 }
 
 export const colors = {
-  primary: '#E32636',
-  secondary: '#FFD700',
-  background: '#FAF1E2',
-  success: '#00A86B',
-  error: '#FF3B30',
-  text: '#000000',
-  textSecondary: '#777777',
-  border: '#dddddd',
-  white: '#FFFFFF',
-}
+  primary: "#E32636",
+  secondary: "#FFD700",
+  background: "#FAF1E2",
+  success: "#00A86B",
+  error: "#FF3B30",
+  text: "#000000",
+  textSecondary: "#777777",
+  border: "#dddddd",
+  white: "#FFFFFF",
+};
 
 export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
   container: {
     flex: 1,
     backgroundColor: colors.background,
     maxWidth: 480,
-    width: '100%',
-    alignSelf: 'center',
+    width: "100%",
+    alignSelf: "center",
     marginBottom: 20,
-    ...(Platform.OS === 'web'
+    ...(Platform.OS === "web"
       ? {
-          height: Platform.select({ web: '100vh' }) as any,
-          overflow: Platform.select({ web: 'auto', default: 'visible' }) as any,
+          height: Platform.select({ web: "100vh" }) as any,
+          overflow: Platform.select({ web: "auto", default: "visible" }) as any,
         }
       : {}),
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.primary,
     paddingVertical: 15,
     paddingHorizontal: 10,
@@ -126,7 +126,7 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     margin: 15,
     borderRadius: 10,
     padding: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -134,33 +134,34 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
   } as ViewStyle,
   balanceLabel: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
   balanceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 5,
   },
   balanceAmount: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
   },
   actionButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 15,
     marginBottom: 15,
+    zIndex: 10, // Pastikan action buttons selalu di atas
   },
   actionButton: {
     backgroundColor: colors.secondary,
     borderRadius: 10,
     padding: 15,
-    width: '48%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    width: "48%",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -168,29 +169,45 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
   },
   actionButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
-    textAlign: 'center',
+    textAlign: "center",
   },
   logButton: {
-    width: '70%',
-    alignSelf: 'center',
+    width: "70%",
+    alignSelf: "center",
     backgroundColor: colors.secondary,
     marginTop: 0,
     borderRadius: 10,
     padding: 15,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
-    zIndex: 10,
-    position: 'relative',
+    zIndex: 15, // Lebih tinggi dari action buttons
+    position: "relative",
+  },
+  logButtonActive: {
+    width: "70%",
+    alignSelf: "center",
+    backgroundColor: colors.secondary,
+    marginTop: 0,
+    borderRadius: 10,
+    padding: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+    zIndex: 15,
+    position: "relative",
   },
   logButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
   },
   activityLogContainer: {
@@ -205,27 +222,44 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 1,
-    position: 'relative',
+    position: "relative",
+    zIndex: 5, // Lebih rendah dari buttons
+  },
+  activityLogContainerEmpty: {
+    flex: 1,
+    backgroundColor: colors.white,
+    marginHorizontal: 15,
+    borderRadius: 10,
+    marginTop: 0, // Margin normal untuk state kosong
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+    position: "relative",
     zIndex: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 40,
   },
   logRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   logIdText: {
     width: 30,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
   },
   logTypeText: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   logTypeTextIn: {
     color: colors.success,
@@ -236,19 +270,31 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
   logTimeText: {
     width: 60,
     fontSize: 16,
-    textAlign: 'right',
-    fontWeight: 'bold',
+    textAlign: "right",
+    fontWeight: "bold",
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   errorText: {
     color: colors.error,
     fontSize: 16,
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
-})
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 40,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    textAlign: "center",
+    fontStyle: "italic",
+  },
+});

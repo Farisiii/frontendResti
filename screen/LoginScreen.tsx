@@ -9,7 +9,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native'
+} from "react-native";
 
 import { loginUser } from '@/api/smartParkService'
 import InputField from '@/components/auth/InputField'
@@ -136,20 +136,20 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView
       style={authStyles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <StatusBar barStyle="light-content" backgroundColor="#E53E3E" />
+      <StatusBar barStyle='light-content' backgroundColor='#E53E3E' />
       <ScrollView
         contentContainerStyle={authStyles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
+        keyboardShouldPersistTaps='handled'
         showsVerticalScrollIndicator={false}
       >
         <LogoHeader />
 
         <View style={authStyles.formContainer}>
           <InputField
-            label="Email"
-            placeholder="Masukkan email Anda"
+            label='Email'
+            placeholder='Masukkan email Anda'
             value={email}
             onChangeText={setEmail}
             iconName="mail-outline"
@@ -158,8 +158,8 @@ export default function LoginScreen() {
           />
 
           <InputField
-            label="Password"
-            placeholder="Masukkan password Anda"
+            label='Password'
+            placeholder='Masukkan password Anda'
             value={password}
             onChangeText={setPassword}
             iconName="lock-closed-outline"
@@ -185,7 +185,7 @@ export default function LoginScreen() {
             disabled={isLoading}
           >
             <Text style={authStyles.loginButtonText}>
-              {isLoading ? 'Masuk...' : 'MASUK'}
+              {isLoading ? "Masuk..." : "MASUK"}
             </Text>
           </TouchableOpacity>
 
@@ -204,5 +204,5 @@ export default function LoginScreen() {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  )
+  );
 }

@@ -1,14 +1,14 @@
-import { Ionicons } from '@expo/vector-icons'
-import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { smartParkStyles } from '../../styles/smartParkStyles'
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { smartParkStyles } from "../../styles/smartParkStyles";
 
 type BalanceCardProps = {
-  userName: string
-  balance: string
-  hideBalance: boolean
-  onToggleVisibility: () => void
-}
+  userName: string;
+  balance: string;
+  hideBalance: boolean;
+  onToggleVisibility: () => void;
+};
 
 /**
  * Balance Card component for displaying user name and balance
@@ -26,18 +26,18 @@ const BalanceCard: React.FC<BalanceCardProps> = ({
       </Text>
       <View style={smartParkStyles.balanceRow}>
         <Text style={smartParkStyles.balanceAmount}>
-          {hideBalance ? 'Rp XXX.XXX.XXX' : balance}
+          {hideBalance ? "Rp XXX.XXX.XXX" : balance}
         </Text>
         <TouchableOpacity onPress={onToggleVisibility}>
           <Ionicons
-            name={hideBalance ? 'eye-off-outline' : 'eye-outline'}
+            name={hideBalance ? "eye-off-outline" : "eye-outline"}
             size={24}
-            color="#777"
+            color='#777'
           />
         </TouchableOpacity>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default BalanceCard
+export default BalanceCard;
