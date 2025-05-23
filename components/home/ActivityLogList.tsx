@@ -1,12 +1,12 @@
-import { smartParkStyles } from "@/styles/smartParkStyles";
-import React from "react";
-import { ScrollView, Text, View } from "react-native";
-import { ActivityLogItem } from "../../types/smartPark";
+import React from 'react'
+import { ScrollView, Text, View } from 'react-native'
+import { smartParkStyles } from '../../styles/smartParkStyles'
+import { ActivityLogItem } from '../../types/smartPark'
 
 type ActivityLogListProps = {
-  logs: ActivityLogItem[];
-  onViewMore?: () => void;
-};
+  logs: ActivityLogItem[]
+  onViewMore?: () => void
+}
 
 /**
  * Activity Log List component for showing vehicle entry/exit history
@@ -16,7 +16,7 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
   logs,
   onViewMore,
 }) => {
-  const hasLogs = logs && logs.length > 0;
+  const hasLogs = logs && logs.length > 0
 
   if (!hasLogs) {
     return (
@@ -27,7 +27,7 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
           </Text>
         </View>
       </View>
-    );
+    )
   }
 
   return (
@@ -49,12 +49,12 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
               <Text
                 style={[
                   smartParkStyles.logTypeText,
-                  item.type === "masuk"
+                  item.type === 'masuk'
                     ? smartParkStyles.logTypeTextIn
                     : smartParkStyles.logTypeTextOut,
                 ]}
               >
-                Kendaraan {item.type === "masuk" ? "Masuk" : "Keluar"}
+                Kendaraan {item.type === 'masuk' ? 'Masuk' : 'Keluar'}
               </Text>
               <Text style={smartParkStyles.logTimeText}>{item.time}</Text>
             </View>
@@ -62,7 +62,7 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
         </ScrollView>
       </View>
     </>
-  );
-};
+  )
+}
 
-export default ActivityLogList;
+export default ActivityLogList
