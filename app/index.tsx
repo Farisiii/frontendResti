@@ -23,10 +23,5 @@ export default function Index() {
   if (isLoggedIn === null) {
     return null
   }
-
-  if (isLoggedIn) {
-    return <Redirect href="./smart-park" />
-  }
-
   return <Redirect href="./login" />
 }

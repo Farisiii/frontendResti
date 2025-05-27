@@ -4,19 +4,21 @@ import { responsive } from '../utils/responsive'
 const PlatListStyles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
   },
   headerContainer: {
-    backgroundColor: '#E62132',
+    backgroundColor: '#E53E3E',
   },
   container: {
     flex: 1,
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
+
+    paddingVertical: responsive.spacing(8, 12, 16),
   },
   searchContainer: {
     paddingHorizontal: responsive.edgeInsets(12, 16, 20),
     paddingVertical: responsive.spacing(8, 12, 16),
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
   },
   searchInputContainer: {
     flexDirection: 'row',
@@ -92,7 +94,7 @@ const PlatListStyles = StyleSheet.create({
     fontSize: responsive.fontSize(12, 14, 16),
   },
   deleteButton: {
-    backgroundColor: '#E62132',
+    backgroundColor: '#E53E3E',
     paddingVertical: responsive.responsivePadding(8),
     paddingHorizontal: responsive.responsivePadding(20),
     borderRadius: responsive.borderRadius(4),
@@ -166,7 +168,7 @@ const PlatListStyles = StyleSheet.create({
     elevation: 10,
   },
   modalHeaderHapus: {
-    backgroundColor: '#E62132',
+    backgroundColor: '#E53E3E',
     paddingVertical: responsive.responsivePadding(16),
     paddingHorizontal: responsive.responsivePadding(16),
     borderBottomWidth: 1,
@@ -205,7 +207,7 @@ const PlatListStyles = StyleSheet.create({
     marginBottom: responsive.responsiveMargin(16),
   },
   vehicleInfoContainer: {
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
     padding: responsive.responsivePadding(12),
     borderRadius: responsive.borderRadius(8),
     width: '100%',
@@ -243,7 +245,7 @@ const PlatListStyles = StyleSheet.create({
     flex: 1,
     paddingVertical: responsive.responsivePadding(16),
     alignItems: 'center',
-    backgroundColor: '#E62132',
+    backgroundColor: '#E53E3E',
     borderLeftWidth: 0.5,
     borderLeftColor: '#E0E0E0',
   },
@@ -289,10 +291,10 @@ const PlatListStyles = StyleSheet.create({
     minHeight: responsive.scaledSize(48),
   },
   inputError: {
-    borderColor: '#E62132',
+    borderColor: '#E53E3E',
   },
   errorText: {
-    color: '#E62132',
+    color: '#E53E3E',
     fontSize: responsive.fontSize(12, 14, 16),
     marginTop: responsive.responsiveMargin(4),
   },

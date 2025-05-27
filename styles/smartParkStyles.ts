@@ -61,7 +61,7 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     maxWidth: 480,
     width: '100%',
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 0,
     ...(Platform.OS === 'web'
       ? {
           height: Platform.select({ web: '100vh' }) as any,
@@ -228,6 +228,7 @@ export const smartParkStyles = StyleSheet.create<SmartParkStyles>({
     elevation: 1,
     position: 'relative',
     zIndex: 5, // Lebih rendah dari buttons
+    marginBottom: 20, // Tambahkan margin bawah untuk jarak dengan tombol
   },
   activityLogContainerEmpty: {
     flex: 1,

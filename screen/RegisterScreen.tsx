@@ -1,8 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRouter } from 'expo-router'
+import React, { useEffect, useState } from 'react'
 import {
   Alert,
+  BackHandler,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -10,11 +11,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native'
 
 import InputField from '@/components/auth/InputField'
 import LogoHeader from '@/components/auth/LogoHeader'
 import { authStyles } from '@/styles/authStyles'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 // Configuration
 const API_BASE_URL = 'https://smartpark-backend.vercel.app/api'
@@ -39,50 +41,78 @@ export type RegisterResponse = {
 }
 
 export default function RegisterScreen() {
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
+  const [username, setUsername] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const router = useRouter()
+
+  // Handle back button untuk keluar dari aplikasi
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert(
+        'Keluar Aplikasi',
+        'Apakah Anda yakin ingin keluar dari aplikasi?',
+        [
+          {
+            text: 'Batal',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {
+            text: 'Keluar',
+            onPress: () => BackHandler.exitApp(),
+          },
+        ]
+      )
+      return true // Prevent default behavior
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    )
+
+    return () => backHandler.remove()
+  }, [])
 
   const validateRegistration = () => {
     if (!username || !email || !password || !confirmPassword) {
-      Alert.alert("Error", "Semua field harus diisi");
-      return false;
+      Alert.alert('Error', 'Semua field harus diisi')
+      return false
     }
 
     if (username.length < 3) {
-      Alert.alert("Error", "Username minimal 3 karakter");
-      return false;
+      Alert.alert('Error', 'Username minimal 3 karakter')
+      return false
     }
 
-    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    const usernameRegex = /^[a-zA-Z0-9_]+$/
     if (!usernameRegex.test(username)) {
       Alert.alert(
-        "Error",
-        "Username hanya boleh mengandung huruf, angka, dan underscore"
-      );
-      return false;
+        'Error',
+        'Username hanya boleh mengandung huruf, angka, dan underscore'
+      )
+      return false
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      Alert.alert("Error", "Format email tidak valid");
-      return false;
+      Alert.alert('Error', 'Format email tidak valid')
+      return false
     }
 
     if (password.length < 6) {
-      Alert.alert("Error", "Password minimal 6 karakter");
-      return false;
+      Alert.alert('Error', 'Password minimal 6 karakter')
+      return false
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Password tidak cocok");
-      return false;
+      Alert.alert('Error', 'Password tidak cocok')
+      return false
     }
 
     return true
@@ -119,10 +149,10 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!validateRegistration()) {
-      return;
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       const result = await registerUser()
@@ -163,93 +193,102 @@ export default function RegisterScreen() {
   }
 
   const handleBackToLogin = () => {
-    router.push("/login");
-  };
+    router.push('/login')
+  }
 
   return (
-    <KeyboardAvoidingView
-      style={authStyles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <StatusBar barStyle='light-content' backgroundColor='#E53E3E' />
-      <ScrollView
-        contentContainerStyle={authStyles.scrollContainer}
-        keyboardShouldPersistTaps='handled'
-        showsVerticalScrollIndicator={false}
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <KeyboardAvoidingView
+        style={authStyles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
+        <StatusBar barStyle="light-content" backgroundColor="#E53E3E" />
+
+        {/* Header tetap di atas, tidak di-scroll */}
         <LogoHeader />
 
-        <View style={authStyles.formContainer}>
-          <InputField
-            label='Username'
-            placeholder='Masukkan username Anda'
-            value={username}
-            onChangeText={setUsername}
-            iconName='person-outline'
-            autoCapitalize='none'
-          />
-
-          <InputField
-            label='Email'
-            placeholder='Masukkan email Anda'
-            value={email}
-            onChangeText={setEmail}
-            iconName='mail-outline'
-            keyboardType='email-address'
-            autoCapitalize='none'
-          />
-
-          <InputField
-            label='Password'
-            placeholder='Masukkan password Anda'
-            value={password}
-            onChangeText={setPassword}
-            iconName='lock-closed-outline'
-            secureTextEntry={!showPassword}
-            showPassword={showPassword}
-            toggleShowPassword={() => setShowPassword(!showPassword)}
-          />
-
-          <InputField
-            label='Konfirmasi Password'
-            placeholder='Masukkan ulang password Anda'
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            iconName='lock-closed-outline'
-            secureTextEntry={!showConfirmPassword}
-            showPassword={showConfirmPassword}
-            toggleShowPassword={() =>
-              setShowConfirmPassword(!showConfirmPassword)
-            }
-          />
-
-          <TouchableOpacity
-            style={[
-              authStyles.loginButton,
-              isLoading && authStyles.loginButtonDisabled,
-            ]}
-            onPress={handleRegister}
-            disabled={isLoading}
+        {/* Form container yang bisa di-scroll */}
+        <View style={[authStyles.formContainer, { flex: 1 }]}>
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: 0, // Remove padding karena sudah ada di formContainer
+              paddingBottom: 20,
+            }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            style={{ flex: 1 }}
           >
-            <Text style={authStyles.loginButtonText}>
-              {isLoading ? "Mendaftar..." : "DAFTAR"}
-            </Text>
-          </TouchableOpacity>
+            <InputField
+              label="Username"
+              placeholder="Masukkan username Anda"
+              value={username}
+              onChangeText={setUsername}
+              iconName="person-outline"
+              autoCapitalize="none"
+            />
 
-          <View style={authStyles.dividerContainer}>
-            <View style={authStyles.dividerLine} />
-            <Text style={authStyles.dividerText}>ATAU</Text>
-            <View style={authStyles.dividerLine} />
-          </View>
+            <InputField
+              label="Email"
+              placeholder="Masukkan email Anda"
+              value={email}
+              onChangeText={setEmail}
+              iconName="mail-outline"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
 
-          <View style={authStyles.signUpContainer}>
-            <Text style={authStyles.signUpText}>Sudah punya akun? </Text>
-            <TouchableOpacity onPress={handleBackToLogin}>
-              <Text style={authStyles.signUpLink}>Masuk Sekarang</Text>
+            <InputField
+              label="Password"
+              placeholder="Masukkan password Anda"
+              value={password}
+              onChangeText={setPassword}
+              iconName="lock-closed-outline"
+              secureTextEntry={!showPassword}
+              showPassword={showPassword}
+              toggleShowPassword={() => setShowPassword(!showPassword)}
+            />
+
+            <InputField
+              label="Konfirmasi Password"
+              placeholder="Masukkan ulang password Anda"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              iconName="lock-closed-outline"
+              secureTextEntry={!showConfirmPassword}
+              showPassword={showConfirmPassword}
+              toggleShowPassword={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
+            />
+
+            <TouchableOpacity
+              style={[
+                authStyles.loginButton,
+                isLoading && authStyles.loginButtonDisabled,
+              ]}
+              onPress={handleRegister}
+              disabled={isLoading}
+            >
+              <Text style={authStyles.loginButtonText}>
+                {isLoading ? 'Mendaftar...' : 'DAFTAR'}
+              </Text>
             </TouchableOpacity>
-          </View>
+
+            <View style={authStyles.dividerContainer}>
+              <View style={authStyles.dividerLine} />
+              <Text style={authStyles.dividerText}>ATAU</Text>
+              <View style={authStyles.dividerLine} />
+            </View>
+
+            <View style={authStyles.signUpContainer}>
+              <Text style={authStyles.signUpText}>Sudah punya akun? </Text>
+              <TouchableOpacity onPress={handleBackToLogin}>
+                <Text style={authStyles.signUpLink}>Masuk Sekarang</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
-  );
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  )
 }

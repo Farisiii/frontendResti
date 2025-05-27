@@ -114,7 +114,8 @@ const ActivityLogList: React.FC<ActivityLogListProps> = ({
                     : smartParkStyles.logTypeTextOut,
                 ]}
               >
-                Kendaraan {item.type === 'masuk' ? 'Masuk' : 'Keluar'}
+                Kendaraan ({item.vehicle_plate}){' '}
+                {item.type === 'masuk' ? 'Masuk' : 'Keluar'}
               </Text>
               <Text style={smartParkStyles.logTimeText}>{item.time}</Text>
             </View>

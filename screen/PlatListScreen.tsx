@@ -18,7 +18,6 @@ import { DeleteConfirmationModal } from '../components/platlist/DeleteConfirmati
 import { EmptyState } from '../components/platlist/EmptyState'
 import { FloatingActionButton } from '../components/platlist/FloatingActionButton'
 import { LoadingState } from '../components/platlist/LoadingState'
-import { SearchBar } from '../components/platlist/SearchBar'
 import VehicleFormModal from '../components/platlist/VehicleFormModal'
 import VehicleList from '../components/platlist/VehicleList'
 
@@ -324,11 +323,11 @@ const PlatListScreen: React.FC = () => {
       </View>
 
       <View style={PlatListStyles.container}>
-        <SearchBar
+        {/* <SearchBar
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
           onClearSearch={clearSearch}
-        />
+        /> */}
 
         {isLoading ? (
           <LoadingState />

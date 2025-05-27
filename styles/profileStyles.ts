@@ -154,7 +154,7 @@ const profileStyles = StyleSheet.create({
     backgroundColor: '#e8f5f0',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#007D4B',
+    shadowColor: '#E53E3E',
     shadowOffset: {
       width: 0,
       height: 1,

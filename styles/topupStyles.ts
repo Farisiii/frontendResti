@@ -10,7 +10,7 @@ const buttonHeight = responsive.scaledSize(responsive.isPortrait() ? 55 : 45)
 export const topUpStyles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
   },
   headerContainer: {
     backgroundColor: '#E62132',
@@ -20,7 +20,7 @@ export const topUpStyles = StyleSheet.create({
     padding: responsive.edgeInsets(12, 16, 20),
     justifyContent: 'space-between',
     width: '100%',
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
   },
   contentLandscape: {
     flexDirection: 'row',
@@ -152,7 +152,7 @@ export const topUpStyles = StyleSheet.create({
     elevation: 10,
   },
   modalHeader: {
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
     paddingVertical: responsive.spacing(12, 16, 20),
     paddingHorizontal: responsive.spacing(12, 16, 20),
     borderBottomWidth: 1,
@@ -178,7 +178,7 @@ export const topUpStyles = StyleSheet.create({
     marginBottom: responsive.spacing(12, 16, 20),
   },
   infoContainer: {
-    backgroundColor: '#F9F3C7',
+    backgroundColor: '#FAF1E2',
     padding: responsive.spacing(10, 12, 14),
     borderRadius: responsive.scaledSize(8),
     width: '100%',

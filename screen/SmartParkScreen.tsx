@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect } from 'react'
 import {
+  Alert,
   AppState,
   AppStateStatus,
+  BackHandler,
   Platform,
   SafeAreaView,
   StatusBar,
@@ -41,6 +43,35 @@ export default function SmartParkScreen({ navigation }: SmartParkScreenProps) {
     refreshActivityLog,
     setAutoRefresh,
   } = useSmartParkData()
+
+  // Handle back button untuk keluar dari aplikasi
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert(
+        'Keluar Aplikasi',
+        'Apakah Anda yakin ingin keluar dari aplikasi?',
+        [
+          {
+            text: 'Batal',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {
+            text: 'Keluar',
+            onPress: () => BackHandler.exitApp(),
+          },
+        ]
+      )
+      return true // Prevent default behavior
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    )
+
+    return () => backHandler.remove()
+  }, [])
 
   // Handle app state changes untuk pause/resume auto-refresh
   useEffect(() => {
